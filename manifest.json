@@ -1,0 +1,17 @@
+{
+  "name": "星ヲ巡る旅",
+  "short_name": "星ヲ巡る旅",
+  "description": "アナタのメモで星を灯す、ブラウザ完結型SFログアプリ",
+  "start_url": "./hoshi_monogatari.html",
+  "display": "standalone",
+  "background_color": "#01040a",
+  "theme_color": "#00e5ff",
+  "icons": [
+    {
+      "src": "ogp_hoshi_monogatari.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
