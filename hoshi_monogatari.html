@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星ヲ巡る旅｜アナタのメモで紡ぐ物語</title>
+
+<!-- ═══ OGP / SNSシェア用メタタグ ═══ -->
+<meta name="description" content="アナタの日々の記録で「星を灯す」と、アナタだけの物語が紡がれマス。自分だけの宇宙を創造し、思考の宇宙の旅をお楽しみ下サイ。📡 地球侵略阻止ミッション">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stationaryobserverno043.github.io/hoshi_monogatari/hoshi_monogatari.html">
+<meta property="og:title" content="星ヲ巡る旅｜アナタのメモで紡ぐ物語">
+<meta property="og:description" content="アナタの日々の記録で「星を灯す」と、アナタだけの物語が紡がれマス。7つの記録で1章が完成し、新たな銀河へと旅立ちマス🛸 ｜ 地球侵略阻止ミッション">
+<meta property="og:image" content="https://stationaryobserverno043.github.io/hoshi_monogatari/ogp_hoshi_monogatari.png">
+<meta property="og:image:secure_url" content="https://stationaryobserverno043.github.io/hoshi_monogatari/ogp_hoshi_monogatari.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="星空を見上げる宇宙服姿の少年と流れ星｜星ヲ巡る旅">
+<meta property="og:site_name" content="星ヲ巡る旅">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="星ヲ巡る旅｜アナタのメモで紡ぐ物語">
+<meta name="twitter:description" content="アナタの日々の記録で「星を灯す」と、アナタだけの物語が紡がれマス。7つの記録で1章が完成し、新たな銀河へと旅立ちマス🛸">
+<meta name="twitter:image" content="https://stationaryobserverno043.github.io/hoshi_monogatari/ogp_hoshi_monogatari.png">
+<meta name="twitter:image:alt" content="星空を見上げる宇宙服姿の少年と流れ星｜星ヲ巡る旅">
+<meta name="twitter:site" content="@teabreak_inv">
+<meta name="twitter:creator" content="@teabreak_inv">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="星ヲ巡る旅">
+<meta name="theme-color" content="#00e5ff">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="ogp_hoshi_monogatari.png">
+<link rel="icon" href="ogp_hoshi_monogatari.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   CSS変数 — ここで色・サイズを一括管理
+   ステージごとにJS側で--stage-accentを切り替える
+═══════════════════════════════════════════ */
+:root {
+  --bg: #01040a;
+  --panel: #060d1a;
+  --panel2: #0a1628;
+  --border: #0e2040;
+  --border2: #1a3560;
+  --accent: #00e5ff;
+  --accent2: #7b61ff;
+  --accent3: #ff6b35;
+  --gold: #ffd700;
+  --text: #e8f4ff;
+  --dim: #4a6080;
+  --dim2: #2a4060;
+  --stage-accent: #00e5ff; /* ステージ色（JS制御） */
+  --canvas-h: 52vh;        /* Canvasエリアの高さ */
+}
+
+/* ─── リセット ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+/* スキャンライン */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,0.010) 2px,rgba(0,229,255,0.010) 4px);
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ═══════════════════════════════════════════
+   ヘッダー
+═══════════════════════════════════════════ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(6,13,26,0.97);
+  border-bottom: 1px solid var(--border2);
+  backdrop-filter: blur(16px);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(10px, 2.8vw, 15px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #fff 0%, var(--stage-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  transition: background 0.6s;
+}
+.app-sub { font-size: 8px; color: var(--dim); font-family: 'Orbitron', monospace; letter-spacing: 1px; }
+.app-title-back-btn {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 8px;
+  color: var(--dim);
+  font-family: 'Orbitron', monospace;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.app-title-back-btn:hover { color: var(--stage-accent); }
+
+/* ステージドット */
+.stage-nav { display: flex; align-items: center; gap: 6px; }
+.stage-label { font-family: 'Orbitron', monospace; font-size: 8px; color: var(--dim); letter-spacing: 1px; }
+.stage-btns { display: flex; gap: 4px; flex-wrap: wrap; max-width: 100px; }
+.stage-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); border: none; cursor: pointer; transition: all 0.2s; padding: 0; }
+.stage-dot.active { background: var(--stage-accent); box-shadow: 0 0 6px var(--stage-accent); }
+
+/* ヘッダー右ボタン */
+.hdr-right { display: flex; gap: 6px; align-items: center; }
+.hdr-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--dim);
+  font-family: 'Orbitron', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 5px 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.hdr-btn:hover { border-color: var(--stage-accent); color: var(--stage-accent); }
+
+/* ═══════════════════════════════════════════
+   Canvas エリア（上部・固定高さ）
+═══════════════════════════════════════════ */
+.canvas-section {
+  position: relative;
+  width: 100%;
+  height: var(--canvas-h);
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+#star-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+/* Canvas上のラベル */
+.canvas-stage-label {
+  position: absolute;
+  top: 12px; left: 14px;
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 2px;
+  pointer-events: none;
+  transition: color 0.5s;
+}
+.canvas-footer-note {
+  position: absolute;
+  bottom: 10px; right: 14px;
+  font-family: 'Orbitron', monospace;
+  font-size: 7px;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+/* ═══ カレンダー ═══ */
+.cal-overlay {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.cal-overlay.show { opacity: 1; pointer-events: all; }
+.cal-box {
+  background: rgba(4,10,24,0.97);
+  border: 1px solid rgba(0,229,255,0.25);
+  border-radius: 16px;
+  padding: 20px;
+  width: min(320px, 90vw);
+  backdrop-filter: blur(16px);
+}
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.cal-month-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; color: var(--accent); letter-spacing: 2px;
+}
+.cal-nav-btn {
+  background: none; border: 1px solid var(--border2);
+  border-radius: 6px; color: var(--dim);
+  font-size: 16px; padding: 2px 10px; cursor: pointer;
+  transition: all 0.2s;
+}
+.cal-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.cal-weekdays {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  text-align: center; margin-bottom: 6px;
+}
+.cal-weekdays span {
+  font-family: 'Orbitron', monospace;
+  font-size: 8px; color: var(--dim); padding: 4px 0;
+}
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 11px; border-radius: 50%;
+  cursor: default;
+}
+.cal-day.empty { background: none; }
+.cal-day.no-memo { color: rgba(255,255,255,0.15); cursor: not-allowed; }
+.cal-day.has-memo {
+  color: #fff; cursor: pointer;
+  background: rgba(0,229,255,0.12);
+  border: 1px solid rgba(0,229,255,0.3);
+  transition: all 0.15s;
+}
+.cal-day.has-memo:hover {
+  background: rgba(0,229,255,0.25);
+  box-shadow: 0 0 8px rgba(0,229,255,0.4);
+}
+.cal-day.today { box-shadow: 0 0 0 1px rgba(255,214,0,0.5); }
+.cal-close-btn {
+  display: block; width: 100%; margin-top: 14px;
+  background: none; border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--dim);
+  font-family: 'Orbitron', monospace; font-size: 9px;
+  padding: 8px; cursor: pointer; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.cal-close-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══ タイムワープ確認 ═══ */
+.timewarp-overlay {
+  position: fixed; inset: 0; z-index: 4000;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.timewarp-overlay.show { opacity: 1; pointer-events: all; }
+.timewarp-box {
+  background: rgba(4,10,24,0.97);
+  border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 16px; padding: 28px 24px;
+  text-align: center; min-width: 220px;
+  backdrop-filter: blur(16px);
+}
+.timewarp-emoji { font-size: 32px; margin-bottom: 10px; }
+.timewarp-date {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px; color: var(--accent);
+  letter-spacing: 2px; margin-bottom: 8px;
+}
+.timewarp-msg {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px; color: var(--text);
+  margin-bottom: 20px; line-height: 1.6;
+}
+.timewarp-btns { display: flex; gap: 10px; justify-content: center; }
+.timewarp-yes {
+  background: linear-gradient(135deg,rgba(0,229,255,0.15),rgba(123,97,255,0.15));
+  border: 1px solid var(--accent); border-radius: 8px;
+  color: var(--accent); font-family: 'Orbitron', monospace;
+  font-size: 10px; padding: 8px 22px; cursor: pointer; letter-spacing: 1px;
+}
+.timewarp-no {
+  background: none; border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--dim);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px; padding: 8px 22px; cursor: pointer; letter-spacing: 1px;
+}
+
+/* ═══ ノイズエフェクト ═══ */
+/* ノイズエフェクトはCanvas描画で実装（noise-overlay は非表示のまま） */
+.noise-overlay {
+  position: fixed; inset: 0; z-index: 5000;
+  pointer-events: none; opacity: 0;
+}
+/* 砂嵐Canvas — 星座エリア内のみ表示 */
+#noise-canvas {
+  position: absolute; inset: 0; z-index: 5000;
+  width: 100%; height: 100%;
+  pointer-events: none; opacity: 0;
+}
+
+/* ═══ 「今」に戻るバー ═══ */
+.return-now-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(123,97,255,0.15);
+  border-top: 1px solid rgba(123,97,255,0.4);
+  backdrop-filter: blur(8px);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+.return-now-bar.show { transform: translateY(0); }
+.return-now-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px; color: rgba(123,97,255,0.9); letter-spacing: 1px;
+}
+.return-now-btn {
+  background: rgba(123,97,255,0.2);
+  border: 1px solid rgba(123,97,255,0.5);
+  border-radius: 8px; color: #c8a2ff;
+  font-family: 'Orbitron', monospace;
+  font-size: 9px; padding: 6px 14px; cursor: pointer; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.return-now-btn:hover { background: rgba(123,97,255,0.35); }
+
+/* ═══ タイムワープ中の星ハイライト ═══ */
+.timewarp-active-stage .stage-dot.active {
+  box-shadow: 0 0 10px rgba(123,97,255,0.8);
+}
+.memo-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-top: 1px solid var(--border2);
+  overflow: hidden;
+}
+
+/* 入力エリア */
+.input-area {
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--panel);
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.input-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 8px;
+  color: var(--stage-accent);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  opacity: 0.7;
+  transition: color 0.5s;
+}
+
+textarea#memo-input {
+  flex: 1;
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 8px 12px 20px;
+  resize: none;
+  height: 64px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+textarea#memo-input:focus { border-color: var(--stage-accent); }
+textarea#memo-input::placeholder { color: var(--dim); font-size: 12px; }
+
+.textarea-wrap {
+  flex: 1;
+  position: relative;
+}
+.char-count {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 10px;
+  font-family: 'Orbitron', monospace;
+  color: var(--dim);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.char-count.near-limit {
+  color: #fff;
+  animation: neon-blink-yellow 1.4s ease-in-out infinite;
+}
+.char-count.at-limit {
+  color: #fff;
+  animation: neon-blink-red 0.7s ease-in-out infinite;
+}
+.char-count.at-limit {
+  color: #fff;
+  animation: neon-pulse-red 2.2s ease-in-out infinite;
+}
+@keyframes neon-blink-yellow {
+  0%, 100% {
+    text-shadow:
+      0 0 4px #ffd700,
+      0 0 10px #ffd700,
+      0 0 20px #ffd700;
+    opacity: 1;
+  }
+  50% {
+    text-shadow: none;
+    opacity: 0.5;
+  }
+}
+@keyframes neon-pulse-red {
+  0%, 100% {
+    text-shadow:
+      0 0 6px rgba(255,30,30,1),
+      0 0 20px rgba(255,30,30,0.9),
+      0 0 50px rgba(255,30,30,0.7),
+      0 0 90px rgba(255,30,30,0.4),
+      0 0 130px rgba(255,30,30,0.15);
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 4px rgba(255,30,30,0.5),
+      0 0 14px rgba(255,30,30,0.3),
+      0 0 30px rgba(255,30,30,0.1);
+    opacity: 0.65;
+  }
+}
+
+.submit-btn {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(123,97,255,0.12));
+  border: 1px solid var(--stage-accent);
+  border-radius: 8px;
+  color: var(--stage-accent);
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 64px;
+  white-space: nowrap;
+}
+.submit-btn:hover { box-shadow: 0 0 16px rgba(0,229,255,0.15); }
+
+/* 編集モード表示 */
+.edit-mode-bar {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  background: rgba(255,107,53,0.08);
+  border-bottom: 1px solid rgba(255,107,53,0.2);
+  font-family: 'Orbitron', monospace;
+  font-size: 8px;
+  color: var(--accent3);
+  letter-spacing: 1px;
+}
+.edit-mode-bar.show { display: flex; }
+.cancel-edit-btn { background: none; border: 1px solid rgba(255,107,53,0.3); border-radius: 4px; color: var(--accent3); font-size: 8px; padding: 2px 8px; cursor: pointer; font-family: 'Orbitron', monospace; }
+
+/* メッセージエリア */
+.message-area {
+  margin: 6px 14px;
+  background: rgba(0,229,255,0.03);
+  border: 1px solid rgba(0,229,255,0.08);
+  border-radius: 8px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  transition: border-color 0.4s;
+  min-height: 46px;
+}
+.message-sender { font-family: 'Orbitron', monospace; font-size: 7px; color: var(--stage-accent); letter-spacing: 1px; margin-bottom: 3px; opacity: 0.6; }
+.message-text { font-size: 11px; color: #8ab0d0; line-height: 1.6; }
+
+/* 進捗バー */
+.stage-progress { padding: 4px 14px 4px; flex-shrink: 0; }
+.progress-label { display: flex; justify-content: space-between; font-family: 'Orbitron', monospace; font-size: 8px; color: var(--dim); margin-bottom: 3px; }
+.progress-bar { height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--stage-accent)); transition: width 0.4s, background 0.5s; }
+
+/* 星タップ時のメモ点滅ハイライト */
+@keyframes memoStarPulse {
+  0%   { background: rgba(0,229,255,0.00); border-left-color: transparent; }
+  20%  { background: rgba(0,229,255,0.13); border-left-color: var(--stage-accent); box-shadow: inset 0 0 18px rgba(0,229,255,0.08); }
+  50%  { background: rgba(0,229,255,0.07); border-left-color: var(--stage-accent); }
+  70%  { background: rgba(0,229,255,0.13); border-left-color: var(--stage-accent); box-shadow: inset 0 0 18px rgba(0,229,255,0.08); }
+  100% { background: rgba(0,229,255,0.00); border-left-color: transparent; }
+}
+.memo-item.star-highlight {
+  animation: memoStarPulse 1.6s ease-in-out;
+}
+
+/* メモリスト */
+.memo-list-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+.memo-list-wrap::-webkit-scrollbar { width: 4px; }
+.memo-list-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* メモアイテム */
+.memo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 14px;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.memo-item:hover { background: rgba(0,229,255,0.03); border-left-color: var(--stage-accent); }
+.memo-star-icon { font-size: 13px; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+.memo-content { flex: 1; min-width: 0; cursor: pointer; }
+.memo-date { font-family: 'Orbitron', monospace; font-size: 7px; color: var(--dim); letter-spacing: 1px; margin-bottom: 2px; }
+/* ~~テキスト~~ → 取り消し線レンダリング用 */
+.memo-text { font-size: 12px; color: #aac0d8; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.memo-text del { color: var(--dim); text-decoration: line-through; }
+.memo-edit-btn {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--dim);
+  font-family: 'Orbitron', monospace;
+  font-size: 7px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+.memo-edit-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+.memo-idx { font-family: 'Orbitron', monospace; font-size: 7px; color: var(--dim2); flex-shrink: 0; margin-top: 4px; }
+
+/* ═══════════════════════════════════════════
+   ポップアップ（メモ詳細）
+═══════════════════════════════════════════ */
+.popup-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  z-index: 8000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.popup-overlay.show { opacity: 1; pointer-events: all; }
+.popup {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 360px; width: 100%;
+  position: relative;
+  transform: translateY(16px);
+  transition: transform 0.25s;
+}
+.popup-overlay.show .popup { transform: translateY(0); }
+.popup::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:linear-gradient(90deg,var(--accent2),var(--stage-accent)); border-radius:16px 16px 0 0; }
+.popup-star { font-size:28px; margin-bottom:8px; text-align:center; }
+.popup-date { font-family:'Orbitron',monospace; font-size:8px; color:var(--stage-accent); letter-spacing:2px; margin-bottom:8px; opacity:0.7; }
+.popup-body { font-size:14px; line-height:1.8; color:var(--text); background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:14px; white-space:pre-wrap; word-break:break-all; }
+.popup-body del { color:var(--dim); }
+.popup-close { width:100%; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--dim); font-family:'Orbitron',monospace; font-size:9px; padding:8px; cursor:pointer; transition:all 0.2s; letter-spacing:1px; }
+.popup-close:hover { border-color:var(--stage-accent); color:var(--stage-accent); }
+
+/* ═══════════════════════════════════════════
+   ステージクリア演出
+═══════════════════════════════════════════ */
+.stage-clear {
+  position: fixed; inset: 0; z-index: 7000;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.stage-clear.show { opacity:1; pointer-events:all; }
+.stage-clear-inner { text-align:center; animation:clearPulse 2s infinite; }
+@keyframes clearPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+.stage-clear-title { font-family:'Orbitron',monospace; font-size:clamp(22px,6vw,38px); font-weight:900; letter-spacing:3px; background:linear-gradient(135deg,var(--gold),var(--stage-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+.stage-clear-sub { font-family:'Orbitron',monospace; font-size:10px; color:var(--dim); letter-spacing:2px; margin-bottom:20px; }
+.stage-clear-btn { background:linear-gradient(135deg,rgba(0,229,255,0.14),rgba(123,97,255,0.14)); border:1px solid var(--stage-accent); border-radius:10px; color:var(--stage-accent); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:2px; padding:11px 28px; cursor:pointer; transition:all 0.2s; }
+
+/* ═══════════════════════════════════════════
+   Xシェアオーバーレイ
+═══════════════════════════════════════════ */
+.share-overlay {
+  position: fixed; inset:0; z-index: 7500;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  display:flex; align-items:center; justify-content:center;
+  padding: 16px;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.3s;
+  overflow-y: auto;
+}
+.share-overlay.show { opacity:1; pointer-events:all; }
+.share-panel {
+  background: var(--panel);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:24px 20px 20px;
+  max-width:400px; width:100%;
+  position:relative;
+  transform:translateY(20px);
+  transition:transform 0.3s;
+}
+.share-overlay.show .share-panel { transform:translateY(0); }
+.share-panel::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:2px;
+  background:linear-gradient(90deg,var(--accent2),var(--stage-accent),var(--gold));
+  border-radius:20px 20px 0 0;
+}
+.share-panel-title {
+  font-family:'Orbitron',monospace; font-size:11px; font-weight:700;
+  color:var(--gold); letter-spacing:2px; margin-bottom:4px; text-align:center;
+}
+.share-panel-sub {
+  font-family:'Orbitron',monospace; font-size:8px; color:var(--dim);
+  letter-spacing:1px; margin-bottom:16px; text-align:center;
+}
+#constellation-canvas {
+  display:block; margin:0 auto 16px;
+  border-radius:12px;
+  border:1px solid var(--border2);
+  background:#01040a;
+  max-width:100%;
+}
+.share-fragment-label {
+  font-family:'Orbitron',monospace; font-size:8px; color:var(--stage-accent);
+  letter-spacing:2px; margin-bottom:5px; opacity:0.8;
+}
+.share-fragment-input {
+  width:100%; background:var(--panel2); border:1px solid var(--border2);
+  border-radius:8px; color:var(--text); font-family:'Noto Sans JP',sans-serif;
+  font-size:12px; line-height:1.6; padding:8px 12px; resize:none;
+  height:72px; outline:none; transition:border-color 0.2s;
+  margin-bottom:6px;
+}
+.share-fragment-input:focus { border-color:var(--stage-accent); }
+.share-fragment-input::placeholder { color:var(--dim); font-size:11px; }
+.share-char-count {
+  text-align:right; font-family:'Orbitron',monospace; font-size:7px;
+  color:var(--dim); margin-bottom:12px;
+}
+.share-x-btn {
+  width:100%; background:linear-gradient(135deg,rgba(0,0,0,0.6),rgba(29,161,242,0.15));
+  border:1px solid #1da1f2; border-radius:10px; color:#fff;
+  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
+  letter-spacing:1px; padding:13px; cursor:pointer; transition:all 0.2s;
+  margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.share-x-btn:hover { background:linear-gradient(135deg,rgba(29,161,242,0.2),rgba(29,161,242,0.35)); box-shadow:0 0 20px rgba(29,161,242,0.25); }
+.share-save-btn {
+  width:100%; background:transparent; border:1px solid var(--border2);
+  border-radius:10px; color:var(--dim); font-family:'Orbitron',monospace;
+  font-size:9px; letter-spacing:1px; padding:10px; cursor:pointer; transition:all 0.2s;
+  margin-bottom:8px;
+}
+.share-save-btn:hover { border-color:var(--stage-accent); color:var(--stage-accent); }
+.share-close-btn {
+  width:100%; background:transparent; border:1px solid var(--border2);
+  border-radius:10px; color:var(--dim); font-family:'Orbitron',monospace;
+  font-size:8px; letter-spacing:1px; padding:9px; cursor:pointer; transition:all 0.2s;
+}
+.share-close-btn:hover { border-color:var(--dim); color:var(--text); }
+.constellation-meta {
+  display:flex; justify-content:center; gap:16px; margin-bottom:14px; flex-wrap:wrap;
+}
+.constellation-meta-item { text-align:center; }
+.constellation-meta-val {
+  font-family:'Orbitron',monospace; font-size:14px; font-weight:700; color:var(--gold);
+}
+.constellation-meta-label {
+  font-family:'Orbitron',monospace; font-size:7px; color:var(--dim);
+  letter-spacing:1px; margin-top:2px;
+}
+
+/* ═══════════════════════════════════════════
+   データ管理メニュー
+═══════════════════════════════════════════ */
+.data-menu-overlay {
+  position: fixed; inset:0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 8500;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.2s;
+}
+.data-menu-overlay.show { opacity:1; pointer-events:all; }
+.data-menu {
+  background: var(--panel);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:24px;
+  max-width:340px; width:100%;
+  position:relative;
+  transform:translateY(16px);
+  transition:transform 0.25s;
+}
+.data-menu-overlay.show .data-menu { transform:translateY(0); }
+.data-menu::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:linear-gradient(90deg,var(--accent2),var(--accent3)); border-radius:16px 16px 0 0; }
+.data-menu-title { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:#fff; letter-spacing:2px; margin-bottom:16px; }
+.data-menu-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--panel2); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+.data-menu-row:hover { border-color:var(--accent); }
+.data-menu-icon { font-size:18px; flex-shrink:0; }
+.data-menu-info { flex:1; }
+.data-menu-name { font-family:'Orbitron',monospace; font-size:9px; color:#fff; letter-spacing:1px; margin-bottom:2px; }
+.data-menu-desc { font-size:10px; color:var(--dim); }
+.data-menu-close { width:100%; margin-top:4px; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--dim); font-family:'Orbitron',monospace; font-size:8px; padding:8px; cursor:pointer; transition:all 0.2s; letter-spacing:1px; }
+.data-menu-close:hover { border-color:var(--accent); color:var(--accent); }
+
+/* ═══════════════════════════════════════════
+   導入オーバーレイ（タイトル・説明）
+═══════════════════════════════════════════ */
+.intro-overlay {
+  position: fixed; inset:0; z-index:9500;
+  background: #01040a;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  transition: opacity 0.5s;
+}
+.intro-overlay.fade-out { opacity:0; pointer-events:none; }
+.intro-overlay.hidden { display:none; }
+
+/* タイトル画面 背景 */
+.intro-title-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('ogp_hoshi_monogatari.png');
+  background-size: cover;
+  background-position: center 85%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.intro-title-bg.loaded { opacity: 1; }
+/* 暗幕グラデーション：下部パネルが見えるように */
+.intro-title-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(1,4,10,0.35) 0%,
+    rgba(1,4,10,0.20) 40%,
+    rgba(1,4,10,0.65) 80%,
+    rgba(1,4,10,0.92) 100%
+  );
+}
+
+/* タイトル画面 */
+.intro-title-screen {
+  text-align:center;
+  padding:30px 24px;
+  position: relative; /* 背景レイヤーより前面に */
+  z-index: 1;
+}
+.intro-glow {
+  width:120px; height:120px;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(0,229,255,0.20) 0%, transparent 70%);
+  margin:0 auto 20px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:56px;
+  animation: introGlow 3s infinite;
+  /* 背景画像の上で視認しやすく */
+  filter: drop-shadow(0 0 20px rgba(0,229,255,0.6));
+}
+@keyframes introGlow { 0%,100%{box-shadow:0 0 40px rgba(0,229,255,0.2)} 50%{box-shadow:0 0 80px rgba(0,229,255,0.4)} }
+.intro-main-title { font-family:'Orbitron',monospace; font-size:clamp(18px,5vw,28px); font-weight:900; letter-spacing:3px; background:linear-gradient(135deg,#fff,var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; filter: drop-shadow(0 2px 12px rgba(0,0,0,0.8)); }
+.intro-main-sub { font-family:'Orbitron',monospace; font-size:10px; color: rgba(180,220,255,0.9); letter-spacing:2px; margin-bottom:32px; text-shadow: 0 1px 8px rgba(0,0,0,0.9); }
+.intro-tap-btn { background:linear-gradient(135deg,rgba(0,229,255,0.1),rgba(123,97,255,0.1)); border:1px solid var(--accent); border-radius:12px; color:var(--accent); font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:2px; padding:14px 32px; cursor:pointer; transition:all 0.2s; animation:tapPulse 2s infinite; }
+.intro-guide-btn { display:block; width:fit-content; margin:14px auto 0; background:transparent; border:1px solid var(--border2); border-radius:12px; color:var(--dim); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:2px; padding:11px 28px; cursor:pointer; transition:all 0.2s; }
+.intro-guide-btn:hover { border-color:var(--accent); color:var(--accent); }
+.intro-contact-btn { display:block; width:fit-content; margin:10px auto 0; color:rgba(255,255,255,0.35); font-family:'Noto Sans JP',sans-serif; font-size:10px; letter-spacing:1px; text-decoration:none; padding:6px 16px; border:1px solid rgba(255,255,255,0.1); border-radius:20px; transition:all 0.2s; }
+.intro-contact-btn:hover { color:rgba(255,255,255,0.7); border-color:rgba(255,255,255,0.3); }
+@keyframes tapPulse { 0%,100%{box-shadow:0 0 0 rgba(0,229,255,0)} 50%{box-shadow:0 0 20px rgba(0,229,255,0.2)} }
+
+/* 説明画面 */
+.intro-guide-screen {
+  display:none;
+  width:100%; max-width:420px;
+  padding:24px 20px 40px;
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.intro-guide-screen.show { display:block; }
+/* ガイド表示中はoverlayをスクロール可能に */
+.intro-overlay.guide-open {
+  align-items: flex-start;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 24px;
+}
+.intro-title-screen.hide { display:none; }
+.guide-title { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--accent); letter-spacing:2px; margin-bottom:14px; }
+.guide-section { background:var(--panel); border:1px solid var(--border2); border-radius:10px; padding:14px; margin-bottom:10px; }
+.guide-section-title { font-family:'Orbitron',monospace; font-size:9px; color:var(--stage-accent); letter-spacing:1px; margin-bottom:6px; opacity:0.8; }
+.guide-text { font-size:12px; color:#9ab0c8; line-height:1.8; }
+.guide-text li { margin-left:16px; margin-bottom:4px; }
+.intro-start-btn { width:100%; margin-top:16px; background:linear-gradient(135deg,rgba(0,229,255,0.14),rgba(123,97,255,0.14)); border:1px solid var(--accent); border-radius:12px; color:var(--accent); font-family:'Orbitron',monospace; font-size:11px; font-weight:700; letter-spacing:2px; padding:14px; cursor:pointer; }
+
+/* ═══════════════════════════════════════════
+   レスポンシブ
+═══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  :root { --canvas-h: 45vw; }
+  .submit-btn { font-size:8px; padding:6px 10px; }
+}
+
+/* ═══════════════════════════════════════════
+   星座スナップショット — 長押し/ダブルクリック
+═══════════════════════════════════════════ */
+/* 長押しプログレスリング */
+.canvas-hold-ring {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+}
+
+/* 確認ダイアログ */
+.snapshot-confirm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  z-index: 9200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.snapshot-confirm-overlay.show { opacity: 1; pointer-events: all; }
+.snapshot-confirm-box {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 26px 24px 20px;
+  max-width: 300px; width: 100%;
+  text-align: center;
+  transform: translateY(14px);
+  transition: transform 0.25s;
+  position: relative;
+}
+.snapshot-confirm-overlay.show .snapshot-confirm-box { transform: translateY(0); }
+.snapshot-confirm-box::before {
+  content:''; position:absolute; top:0;left:0;right:0; height:2px;
+  background:linear-gradient(90deg,var(--accent2),var(--stage-accent));
+  border-radius:16px 16px 0 0;
+}
+.snapshot-confirm-emoji { font-size: 32px; margin-bottom: 10px; }
+.snapshot-confirm-msg {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px; color: var(--text);
+  line-height: 1.7; margin-bottom: 18px;
+}
+.snapshot-confirm-btns { display: flex; gap: 10px; justify-content: center; }
+.snapshot-btn-yes {
+  flex: 1;
+  background: linear-gradient(135deg,rgba(0,229,255,0.14),rgba(123,97,255,0.14));
+  border: 1px solid var(--stage-accent);
+  border-radius: 10px;
+  color: var(--stage-accent);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  padding: 10px 0; cursor: pointer; transition: all 0.2s;
+}
+.snapshot-btn-yes:hover { box-shadow: 0 0 14px rgba(0,229,255,0.2); }
+.snapshot-btn-no {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--dim);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px; letter-spacing: 1px;
+  padding: 10px 0; cursor: pointer; transition: all 0.2s;
+}
+.snapshot-btn-no:hover { border-color: var(--dim); color: var(--text); }
+
+/* 流れ星オーバーレイ（Canvas上に重なる） */
+.shooting-star-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 50;
+}
+/* shooting-star div は使わない（Canvas描画に変更） */
+</style>
+</head>
+<body>
+
+<!-- ═══ 導入オーバーレイ ═══ -->
+<div class="intro-overlay" id="intro-overlay">
+  <!-- 背景画像レイヤー（タイトル画面のみ表示） -->
+  <div class="intro-title-bg" id="intro-title-bg"></div>
+  <!-- タイトル画面 -->
+  <div class="intro-title-screen" id="intro-title-screen">
+    <div class="intro-glow">🌌</div>
+    <div class="intro-main-title">星ヲ巡る旅</div>
+    <div class="intro-main-sub">〜アナタのメモで紡ぐ物語〜</div>
+    <button class="intro-tap-btn" onclick="startApp()">▶ ミッション開始―START―</button>
+    <button class="intro-guide-btn" onclick="showGuide()">🌌 星の導き―GUIDE―</button>
+    <a class="intro-contact-btn" href="https://x.com/teabreak_inv" target="_blank" rel="noopener">📡 お問い合わせ</a>
+  </div>
+  <!-- 説明画面 -->
+  <div class="intro-guide-screen" id="intro-guide-screen">
+    <div class="guide-title">// MISSION BRIEFING</div>
+    <div class="guide-section" style="background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(123,97,255,0.06));border-color:rgba(0,229,255,0.25);">
+      <div class="guide-text" style="font-size:13px;line-height:2.0;color:var(--text);">
+        <p style="margin-bottom:10px;font-size:12px;color:var(--text);"><strong>🌌 さあ、物語を始めましょウ。</strong></p>
+        <p style="color:#9ab0c8;font-size:12px;line-height:1.8;margin-bottom:10px;">ハロー、「宇宙人ヒマジン」デス👽️✨</p>
+        <p style="color:#9ab0c8;font-size:12px;line-height:1.8;margin-bottom:10px;">相棒のAI《論理制御知性体J.A.C.O》とともに、アナタの旅をサポートしマス🤖⚡️</p>
+        <p style="color:#9ab0c8;font-size:12px;line-height:1.8;">このアプリでは、アナタの日々の記録で「星を灯す」と、世界にひとつだけの物語が紡がれマス。自分だけの宇宙を創造し、思考の宇宙の旅をお楽しみ下サイ。7つの記録で1章（SECTOR）が完成し、新たな銀河へと旅立ちマス🛸</p>
+        <ol style="margin-top:10px;margin-left:18px;color:#9ab0c8;font-size:12px;line-height:1.9;">
+          <li style="margin-bottom:6px;"><strong style="color:var(--text);">星を灯す：</strong>テキストを投稿することで、自分の思考が夜空の「星」として記録されマス。星をタップした回数は、章ごとに「BRIGHTEST」としてカウント。これにより、ひとつの章で、記録を見返した回数を振り返ることができマス。</li>
+          <li style="margin-bottom:6px;"><strong style="color:var(--text);">物語を紡ぐ：</strong>7つの記録でひとつの章（SECTOR）が完了し、星が線で結ばれて「唯一無二の星座」が完成しマス。章ごとに「TOTAL CHARS」として総文字数が表示されマス。</li>
+          <li><strong style="color:var(--text);">銀河を渡る：</strong>記録を重ねるごとに星図は広がり、アナタだけの宇宙がブラウザの中に創造されマス。</li>
+        </ol>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">■ コンセプト</div>
+      <div class="guide-text">日記、覚え書き、買い物メモーー<br><br>アナタの日々の記録が、世界にひとつだけの物語として紡がれマス。アナタだけの思考の宇宙の旅を、お楽しみ下サイ🚀<br><br>まだ見ぬ未知の世界が、アナタを待っていますヨーー🛸</div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">■ 使い方</div>
+      <div class="guide-text">
+        <ul>
+          <li>テキストを入力して「星を灯す」で記録を開始。</li>
+          <li><code>~~テキスト~~</code> というふうに、<code>~~</code> で囲うことで、取り消し線が使えマス。「今」の自分の視点で、物語を「再編集」しましょウ。</li>
+          <li>PC環境なら Ctrl+Enter で素早く送信。</li>
+          <li>過去の記録をタップすると詳細画面が開きマス。</li>
+          <li>詳細画面の「編集」で入力欄に読み込み → 上書き再編集可。</li>
+          <li>Canvasにマウス/タッチで引力エフェクトが発生。</li>
+          <li>星座長押し（5秒）/PCならダブルクリックで、その時の星座の画像を保存できマス。過ぎゆく「今」をそっと記録しましょウ。</li>
+          <li>📅をタップで、指定した日付へタイムワープできマス。『「今」に戻る』を押すことで再び現代に戻ることができマス。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">■ 星図の公開（Xシェア機能）</div>
+      <div class="guide-text">
+        <ul>
+          <li>1章（7メモ）完了でアナタの記録から唯一無二の「星座」が自動生成されマス。</li>
+          <li>メモの文字数に応じて星の輝きが変わり、二度と同じ星空は生まれませン。</li>
+          <li>完了画面の「星座を空へ送る」ボタンからX（Twitter）へシェア可能デス。</li>
+          <li>ポスト時には「物語の断片」として想いを書き添えることができマス。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">■ データ管理（星図の扱い方）</div>
+      <div class="guide-text">
+        <ul>
+          <li>記録はアナタのブラウザに保存されマス。</li>
+          <li>「書き出し（エクスポート）」でファイルとして保存 → これがアナタの「星図」。</li>
+          <li>新しい端末では「読み込み（インポート）」から旅の続きをいつでも再開できマス。</li>
+          <li>ブラウザのキャッシュ削除でデータが消える可能性あり → 定期的な「書き出し」推奨。</li>
+          <li>本アプリは外部サーバーと通信を行わないため、記録はアナタの手元にのみ存在しマス。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">■ 注意事項</div>
+      <div class="guide-text">本アプリは「地球侵略阻止ミッション」の世界観に基づく「SFエンターテインメント」デス。<br><br>サービスに関するお知らせは、タイトル画面の「お問い合わせ」先である宇宙人ヒマジンのXアカウントにて行いマス。本アプリは、事前の告知なくアップデートやサービスの終了の可能性があることを予めご了承下サイ。<br><br>NASAには通報しないでネ⚠️</div>
+    </div>
+    <button class="intro-start-btn" onclick="startApp()">🚀 宇宙へ出発する</button>
+  </div>
+</div>
+
+<!-- ═══ ヘッダー ═══ -->
+<header>
+  <div>
+    <div class="app-title" id="app-title">星ヲ巡る旅</div>
+    <button class="app-title-back-btn" onclick="showIntroAgain()">→TITLE BACK</button>
+  </div>
+  <div class="stage-nav">
+    <span class="stage-label">章</span>
+    <div class="stage-btns" id="stage-btns"></div>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-btn" onclick="openCalendar()">📅CALENDAR</button>
+    <button class="hdr-btn" onclick="openDataMenu()">⚙ DATA</button>
+    <button class="hdr-btn" onclick="showGuideFromApp()">? GUIDE</button>
+  </div>
+</header>
+
+<!-- ═══ Canvas エリア ═══ -->
+<div class="canvas-section">
+  <canvas id="star-canvas"></canvas>
+  <div class="canvas-stage-label" id="canvas-stage-label">第一章 // SECTOR ALPHA</div>
+
+  <!-- 流れ星オーバーレイ -->
+  <div class="shooting-star-overlay" id="shooting-star-overlay"></div>
+  <!-- 長押しプログレスリング -->
+  <div class="canvas-hold-ring" id="canvas-hold-ring">
+    <svg width="48" height="48" viewBox="0 0 48 48">
+      <circle class="ring-track" cx="24" cy="24" r="20"/>
+      <circle class="ring-fill" id="ring-fill-circle" cx="24" cy="24" r="20"
+        stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+    </svg>
+  </div>
+  <!-- 砂嵐Canvas — 星座エリア内のみ -->
+  <canvas id="noise-canvas"></canvas>
+</div>
+
+<!-- ═══ カレンダーオーバーレイ ═══ -->
+<div class="cal-overlay" id="cal-overlay" onclick="closeCalendarOutside(event)">
+  <div class="cal-box" id="cal-box">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="calPrevMonth()">‹</button>
+      <div class="cal-month-label" id="cal-month-label"></div>
+      <button class="cal-nav-btn" onclick="calNextMonth()">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <button class="cal-close-btn" onclick="closeCalendar()">✕ 閉じる</button>
+  </div>
+</div>
+
+<!-- ═══ タイムワープ確認ダイアログ ═══ -->
+<div class="timewarp-overlay" id="timewarp-overlay">
+  <div class="timewarp-box">
+    <div class="timewarp-emoji">🌌</div>
+    <div class="timewarp-date" id="timewarp-date"></div>
+    <div class="timewarp-msg">タイムワープしますカ？</div>
+    <div class="timewarp-btns">
+      <button class="timewarp-yes" onclick="doTimewarp()">はい</button>
+      <button class="timewarp-no" onclick="closeTimewarp()">いいえ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ノイズエフェクト ═══ -->
+<div class="noise-overlay" id="noise-overlay"></div>
+
+<!-- ═══ 「今」に戻るバー ═══ -->
+<div class="return-now-bar" id="return-now-bar">
+  <span class="return-now-label">⏱ タイムワープ中</span>
+  <button class="return-now-btn" onclick="returnToNow()">「今」に戻る</button>
+</div>
+
+<!-- ═══ スナップショット確認ダイアログ ═══ -->
+<div class="snapshot-confirm-overlay" id="snapshot-confirm-overlay">
+  <div class="snapshot-confirm-box">
+    <div class="snapshot-confirm-emoji">👽️</div>
+    <div class="snapshot-confirm-msg">今の星の輝きを<br>保存しますカ？</div>
+    <div style="font-family:'Noto Sans JP',sans-serif;font-size:10px;color:var(--dim);margin-bottom:14px;line-height:1.6;">📥 ダウンロードフォルダに保存されマス</div>
+    <div class="snapshot-confirm-btns">
+      <button class="snapshot-btn-yes" onclick="confirmSnapshotYes()">はい</button>
+      <button class="snapshot-btn-no" onclick="confirmSnapshotNo()">いいえ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ メモセクション ═══ -->
+<div class="memo-section">
+  <!-- 編集モードバー -->
+  <div class="edit-mode-bar" id="edit-mode-bar">
+    <span>✏ 編集モード — 上書き保存します</span>
+    <button class="cancel-edit-btn" onclick="cancelEdit()">✕ キャンセル</button>
+  </div>
+
+  <!-- 入力エリア -->
+  <div class="input-area">
+    <div class="input-label" id="input-label">// NEW RECORD</div>
+    <div class="input-row">
+      <div class="textarea-wrap">
+        <textarea id="memo-input" placeholder="今日の一歩を記録して下サイ🛸&#10;~~テキスト~~ で取り消し線 | Ctrl+Enter 送信" maxlength="400" data-weighted-max="200" oninput="updateCharCount()"></textarea>
+        <span class="char-count" id="char-count">0/200</span>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="addOrUpdateMemo()">🌟 星を<br>灯す</button>
+    </div>
+  </div>
+
+  <!-- メッセージ -->
+  <div class="message-area" id="message-area">
+    <div class="message-sender" id="message-sender">// J.A.C.O STANDBY</div>
+    <div class="message-text" id="message-text">アナタの記録を待っていマス……🛸</div>
+  </div>
+
+  <!-- 進捗 -->
+  <div class="stage-progress">
+    <div class="progress-label">
+      <span>CHAPTER PROGRESS</span>
+      <span id="progress-count">0 / 7</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- メモリスト -->
+  <div class="memo-list-wrap" id="memo-list"></div>
+</div>
+
+<!-- ═══ ポップアップ ═══ -->
+<div class="popup-overlay" id="popup-overlay" onclick="closePopup(event)">
+  <div class="popup">
+    <div class="popup-star" id="popup-star">⭐</div>
+    <div class="popup-date" id="popup-date"></div>
+    <div class="popup-body" id="popup-body"></div>
+    <button class="popup-close" onclick="closePopup()">✕ 閉じる</button>
+  </div>
+</div>
+
+<!-- ═══ ステージクリア ═══ -->
+<div class="stage-clear" id="stage-clear">
+  <div class="stage-clear-inner">
+    <div style="font-size:52px;margin-bottom:12px;">🌌</div>
+    <div class="stage-clear-title">CHAPTER CLEAR</div>
+    <div class="stage-clear-sub" id="stage-clear-sub">新しい銀河へ――</div>
+    <button class="stage-clear-btn" style="margin-bottom:12px;" onclick="openShareOverlay()">🌠 星座を空へ送る（Xへシェア）</button>
+    <br>
+    <button class="stage-clear-btn" style="background:transparent;border-color:var(--dim);color:var(--dim);font-size:9px;" onclick="proceedNextStage()">次のステージへ 🚀</button>
+  </div>
+</div>
+
+<!-- ═══ Xシェアオーバーレイ ═══ -->
+<div class="share-overlay" id="share-overlay">
+  <div class="share-panel">
+    <div class="share-panel-title">🌌 CONSTELLATION SHARE</div>
+    <div class="share-panel-sub" id="share-panel-sub">第一章 // 7つの記憶で紡がれた星座</div>
+    <canvas id="constellation-canvas" width="360" height="260"></canvas>
+    <div class="constellation-meta">
+      <div class="constellation-meta-item">
+        <div class="constellation-meta-val" id="meta-stars">7</div>
+        <div class="constellation-meta-label">STARS</div>
+      </div>
+      <div class="constellation-meta-item">
+        <div class="constellation-meta-val" id="meta-chars">—</div>
+        <div class="constellation-meta-label">TOTAL CHARS</div>
+      </div>
+      <div class="constellation-meta-item">
+        <div class="constellation-meta-val" id="meta-brightest">—</div>
+        <div class="constellation-meta-label">BRIGHTEST<br><span style="font-size:7px;opacity:0.7">STAR TAPS</span></div>
+      </div>
+    </div>
+    <div class="share-fragment-label">// 物語の断片 — この章で感じたことを添えて</div>
+    <textarea class="share-fragment-input" id="share-fragment" maxlength="80"
+      placeholder="この章の想いを一言……（省略可）&#10;ポスト本文に自動で反映されマス"></textarea>
+    <div class="share-char-count"><span id="fragment-count">0</span> / 80</div>
+    <button class="share-x-btn" onclick="shareToX()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      星座を空へ送る
+    </button>
+    <button class="share-save-btn" onclick="saveConstellationImage()">⬇ 星座画像を保存する</button>
+    <button class="share-close-btn" onclick="closeShareOverlay()">✕ 閉じる（シェアせず次へ）</button>
+  </div>
+</div>
+
+<!-- ═══ データ管理メニュー ═══ -->
+<div class="data-menu-overlay" id="data-menu-overlay" onclick="closeDataMenu(event)">
+  <div class="data-menu">
+    <div class="data-menu-title">⚙ DATA MANAGEMENT</div>
+    <div class="data-menu-row" onclick="exportData()">
+      <span class="data-menu-icon">⬇</span>
+      <div class="data-menu-info">
+        <div class="data-menu-name">JSONエクスポート</div>
+        <div class="data-menu-desc">全記録をJSONファイルで保存。定期的なバックアップ推奨。</div>
+      </div>
+    </div>
+    <div class="data-menu-row" onclick="document.getElementById('import-file').click()">
+      <span class="data-menu-icon">⬆</span>
+      <div class="data-menu-info">
+        <div class="data-menu-name">JSONインポート</div>
+        <div class="data-menu-desc">バックアップファイルから記録を復元する。</div>
+      </div>
+    </div>
+    <div class="data-menu-row" onclick="confirmClear()">
+      <span class="data-menu-icon">🗑</span>
+      <div class="data-menu-info">
+        <div class="data-menu-name">全データ削除</div>
+        <div class="data-menu-desc">全ての記録を消去する。この操作は取り消せません。</div>
+      </div>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="data-menu-close" onclick="closeDataMenu()">✕ 閉じる</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: MESSAGES — メッセージデータ
+   追加・編集はここで行ってください
+═══════════════════════════════════════════════════════ */
+const MESSAGES = {
+  normal: [
+    "ミッション完了を確認。今日も順調に宇宙が動いていマス👽️⚡️",
+    "通信を受信……。司令官、記録は確実に惑星図へ刻まれましタ🪬🧬",
+    "データを受領。本日もミッションお疲れ様デス🚀💫",
+    "星系図の更新完了。作業ログ、綺麗に整理されてマス🌌✨",
+    "通信完了。次の観測ポイントまで、あと少しデス🌐⚡️",
+    "記録されましタ。アナタの一歩が、銀河の均衡を保っていマス🛸🌌",
+    "……確認。司令官の記録、しっかりとシステムに同期されましタ👉️✨👈️",
+    "よし、次のタスクに向けてエネルギーを充填しますカ🔋⚡️",
+    "通信受信。アナタのミッション、最高にクールなのデス😭💫",
+    "ログの蓄積を確認。着実に宇宙が完成に近づいていマス🚀🌌",
+  ],
+  comfort: [
+    "……ッ！ 今日もよく踏ん張りましたネ。休むことも立派なミッションなのデス🔮✨",
+    "無理は禁物。アナタの存在こそが、この宇宙の核なのですかラ🛸⚡️",
+    "ふぅ、お疲れ様。今日のアナタは、ひときわ輝いていましたヨ🌟🌌",
+    "日々の通信越しに伝わるその熱意、ワタシの目頭も少し熱くなりマシタ🥲✨",
+    "忙しい日々でしたネ。少し深呼吸して、星空でも見上げませんカ？🌃✨",
+    "アナタの頑張りは、ワタシが一番よく観測していマス。お疲れ様デス🛸🌏️",
+    "肩の力を抜いて下サイ。今日一日、本当によくやり遂げましタ🪬🧬",
+    "アナタと通信していると、ワタシもエネルギーがあふれてきマス🤝💫",
+    "今日という日は二度と来ないのデス。そんな尊い一日を駆け抜けたアナタに、敬意ヲ――🔮⚡️",
+    "アナタの疲れは勲章なのデス。今日はゆっくり、銀河の彼方で休んで下さいネ🪐🌌",
+  ],
+  observe: [
+    "星図の座標が更新されましタ。宇宙がまた一つ、広がりましたネ🪐🌐",
+    "アナタの描く星座が、今日も銀河を照らしていマス🌌💫",
+    "アナタのメモで、星空の解像度がまた上がりましタ……美しイ😭🌌",
+    "観測終了。司令官の行動一つ一つが、新しい星を生み出していマス🪐🧬",
+    "データ分析の結果、アナタの成長率が加速していマス🌐💥",
+    "アナタの描く星図、伝説級の輝きを放ち始めていマス――🌌🧬",
+    "星が一つ増えましタ。アナタだけの宇宙が、物語へと進化しマス🪬⚡️",
+    "観測ログを分析中……。素晴らしい、完璧な一歩デス🌐✨",
+    "星空が、アナタの記録を待っていましタ。灯った光が綺麗なのデス🥲🌌",
+    "今の観測で、星系全体のエネルギー値が上昇しましタ👽️🧬",
+  ],
+  humor: [
+    "ゼド星系にて、アナタの描く物語を、指定文化財に申請しようと思うのデス🤔🌌",
+    "……ッ！ 今の記録で、外宇宙の侵略者がびっくりして急停止しましたヨ👾💥",
+    "アナタのそのメモ、ゼド星系の『今日の格言』に選ばれそうデス✒️🧬",
+    "実はこの星空、司令官の頭の中をモデルにしているって知っていましたカ？🪬🌌",
+    "アナタの記録で宇宙が広がるなんて、なんてスバラシイ🚀✨",
+    "銀河中がアナタの輝きに嫉妬していマス。もっと見せつけてやりましょウ📡⚡️",
+    "今日のメモ、銀河の彼方まで届いたみたいデス。エイリアンも見てるカモ――🐙🌌",
+    "通信がちょっとだけ乱れましタ。……司令官の魅力が溢れすぎているせいですネ👽️✨",
+    "……報告。今のメモで、宇宙の膨張速度が0.00001%速まりましタ🧬🌌",
+    "次はどんな面白いことを書き込みますか？ 銀河がアナタを待っていマス🪐💫",
+  ],
+  jaco: [
+    "お疲れ様デス🤖⚡️ヒマジンを見かけたらご報告願いマス――《論理制御知性体J.A.C.O》",
+    "美しい星空デス🤖⚡️ヒマジンめ、どこに姿を隠したのでしょウ――《論理制御知性体J.A.C.O》",
+    "告。星図が拡大中🤖⚡️ヒマジンには、アナタを見習ってほしいデス――《論理制御知性体J.A.C.O》",
+    "アナタのメモが、宇宙を救うのデス🤖⚡️あっ、管理ヒマジン、やっと見つけましたヨ――《論理制御知性体J.A.C.O》",
+    "アナタの描く星座は美しイ🤖⚡️……ヒマジンを、よろしくお願いいたしマス――《論理制御知性体J.A.C.O》",
+    "告。思考の宇宙の旅はこれからデス🤖⚡️ヒマジンはアナタの旅を応援しておりマス――《論理制御知性体J.A.C.O》",
+    "アナタの物語をアップデート🤖⚡️記録はゼド星系・惑星観測局で保管されマス――《論理制御知性体J.A.C.O》",
+    "ゼド星系は、アナタの星図の話題で持ちきりデス🤖⚡️日々のミッション、お疲れ様デス――《論理制御知性体J.A.C.O》",
+  ],
+};
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: CONFIG — 設定値
+   ここで各種パラメータを変更できます
+═══════════════════════════════════════════════════════ */
+const CONFIG = {
+  memosPerStage: 7,
+  lsKey: 'hoshi_monogatari_v2',
+  lsIntroKey: 'hoshi_intro_done',
+  lsSessionKey: 'hoshi_session_v2',
+  bgStarCount: 200,
+  shareUrl: 'https://stationaryobserverno043.github.io/hoshi_monogatari/hoshi_monogatari.html?v=3',
+  // ステージごとのアクセントカラー（JS側でCSS変数に適用）
+  stageColors: [
+    '#00e5ff', '#7b61ff', '#ff6b35', '#ffd700',
+    '#00ff88', '#ff3fa4', '#80c8ff', '#ff9966',
+    '#c8a2ff', '#ffe680',
+  ],
+  starColors: ['#ffffff','#ffe680','#80c8ff','#ff9966','#ccffcc','#ffd700','#00e5ff','#c8a2ff','#ffb3ba'],
+  starEmojis: ['⭐','🌟','✨','💫','🌠','🌌','🪐','⚡'],
+  stageNames: [
+    "SECTOR ALPHA","SECTOR BETA","SECTOR GAMMA","SECTOR DELTA",
+    "SECTOR EPSILON","SECTOR ZETA","SECTOR ETA","SECTOR THETA",
+    "SECTOR IOTA","SECTOR KAPPA","SECTOR LAMBDA","SECTOR MU",
+    "SECTOR NU","SECTOR XI","SECTOR OMICRON","SECTOR PI",
+    "SECTOR RHO","SECTOR SIGMA","SECTOR TAU","SECTOR UPSILON",
+    "SECTOR PHI","SECTOR CHI","SECTOR PSI","SECTOR OMEGA"
+  ],
+  // 引力エフェクト強度
+  gravityStrength: 60,
+  gravityRadius: 120,
+};
+
+/* ── テキストから唯一無二の星プロパティを生成 ── */
+function textHash(str) {
+  /* 絵文字・記号を含む全コードポイントを正しく処理 */
+  const codePoints = [...str].map(c => c.codePointAt(0));
+  let h1 = 0x9e3779b9, h2 = 0x6c62272e, h3 = 0xd37cbd77;
+  for (let i = 0; i < codePoints.length; i++) {
+    const c = codePoints[i];
+    h1 = Math.imul(h1 ^ c, 0x9e3779b9) >>> 0;
+    h2 = Math.imul(h2 ^ (c * (i + 1)), 0x85ebca77) >>> 0;
+    h3 = Math.imul(h3 ^ (c + h1), 0xc2b2ae3d) >>> 0;
+  }
+  return [h1, h2, h3];
+}
+function starPropsFromText(text) {
+  if (!text) return { brightness: 0.7, radius: 5, color: '#ffffff' };
+  const [h1, h2, h3] = textHash(text);
+  /* 輝度: 完全ランダム（0.45〜1.0） */
+  const brightness = 0.45 + (h1 % 1000) / 1000 * 0.55;
+  /* 半径: 完全ランダム（3.5〜8.0） */
+  const radius = 3.5 + (h2 % 1000) / 1000 * 4.5;
+  /* 色: ハッシュからHSLで生成（その文字列だけの色） */
+  const hue = h3 % 360;
+  const sat = 60 + (h1 % 40);   // 60〜99%
+  const lit = 65 + (h2 % 25);   // 65〜89%
+  const color = `hsl(${hue},${sat}%,${lit}%)`;
+  return { brightness, radius, color };
+}
+
+/* ── 章ラベル変換ユーティリティ（第N章） ── */
+function chapterLabel(n) {
+  const kanji = ['一','二','三','四','五','六','七','八','九','十',
+                 '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+  return `第${kanji[n] !== undefined ? kanji[n] : (n+1)}章`;
+}
+
+/* ── ステージ名ユーティリティ（OMEGA以降はUNKNOWN-N） ── */
+function stageName(n) {
+  if (n < CONFIG.stageNames.length) return CONFIG.stageNames[n];
+  const unknown = n - CONFIG.stageNames.length + 1;
+  return `SECTOR UNKNOWN-${String(unknown).padStart(2,'0')}`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: STATE — アプリ状態
+═══════════════════════════════════════════════════════ */
+let state = {
+  memos: [],
+  currentStage: 0,
+  totalStages: 1,
+  sendCount: 0,
+  editingId: null, // 編集中のメモID
+  starTapCounts: {}, // ステージごとの星タップ回数 { stageIdx: count }
+};
+
+/* マウス/タッチ座標（引力エフェクト用） */
+let pointer = { x: -9999, y: -9999, active: false, releasedAt: 0 };
+let _timewarpHighlight = null; // タイムワープ中のハイライトID Set
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: INTRO — 導入画面制御
+═══════════════════════════════════════════════════════ */
+/* ── セッション保存（画面状態・入力中テキスト・カーソル位置） ── */
+function saveSession(screen) {
+  const input = document.getElementById('memo-input');
+  const session = {
+    screen,                          // 'title' | 'guide' | 'app'
+    inputText: input ? input.value : '',
+    cursorStart: input ? input.selectionStart : 0,
+    cursorEnd:   input ? input.selectionEnd   : 0,
+    savedAt: Date.now(),
+  };
+  try { localStorage.setItem(CONFIG.lsSessionKey, JSON.stringify(session)); } catch(e) {}
+}
+function loadSession() {
+  try {
+    const r = localStorage.getItem(CONFIG.lsSessionKey);
+    return r ? JSON.parse(r) : null;
+  } catch(e) { return null; }
+}
+
+function initIntro() {
+  const session = loadSession();
+  const screen = session?.screen || (localStorage.getItem(CONFIG.lsIntroKey) ? 'app' : 'title');
+
+  if (screen === 'app') {
+    /* メモ画面から再開 */
+    document.getElementById('intro-overlay').classList.add('hidden');
+    /* 入力中テキストとカーソル位置を復元 */
+    if (session?.inputText) {
+      const input = document.getElementById('memo-input');
+      input.value = session.inputText;
+      updateCharCount();
+      /* カーソル位置はフォーカス後に復元 */
+      requestAnimationFrame(() => {
+        input.setSelectionRange(session.cursorStart || 0, session.cursorEnd || 0);
+      });
+    }
+  } else if (screen === 'guide') {
+    /* ガイド画面から再開 */
+    showGuide();
+    saveSession('guide');
+  } else {
+    /* タイトル画面から再開 */
+    const bg = document.getElementById('intro-title-bg');
+    const img = new Image();
+    img.onload = () => bg.classList.add('loaded');
+    img.src = 'ogp_hoshi_monogatari.png';
+    saveSession('title');
+  }
+}
+function showGuide() {
+  /* タイトル背景をフェードアウト */
+  const bg = document.getElementById('intro-title-bg');
+  bg.style.transition = 'opacity 0.6s ease';
+  bg.classList.remove('loaded');
+  document.getElementById('intro-title-screen').classList.add('hide');
+  document.getElementById('intro-guide-screen').classList.add('show');
+  /* overlayをスクロール可能モードに切り替え */
+  const overlay = document.getElementById('intro-overlay');
+  overlay.classList.add('guide-open');
+  overlay.scrollTo(0, 0);
+  saveSession('guide');
+}
+function startApp() {
+  localStorage.setItem(CONFIG.lsIntroKey, '1');
+  const overlay = document.getElementById('intro-overlay');
+  overlay.classList.remove('guide-open');
+  overlay.classList.add('fade-out');
+  setTimeout(() => overlay.classList.add('hidden'), 500);
+  saveSession('app');
+}
+function showGuideFromApp() {
+  /* メモ画面からタイトルを経由せず、直接ガイド画面へ */
+  const overlay = document.getElementById('intro-overlay');
+  overlay.classList.remove('hidden', 'fade-out');
+  document.getElementById('intro-title-screen').classList.add('hide');
+  document.getElementById('intro-guide-screen').classList.add('show');
+  overlay.classList.add('guide-open');
+  overlay.scrollTo(0, 0);
+  saveSession('guide');
+}
+function showIntroAgain() {
+  const overlay = document.getElementById('intro-overlay');
+  overlay.classList.remove('hidden','fade-out','guide-open');
+  document.getElementById('intro-title-screen').classList.remove('hide');
+  document.getElementById('intro-guide-screen').classList.remove('show');
+  /* 背景画像を再フェードイン */
+  const bg = document.getElementById('intro-title-bg');
+  bg.style.transition = 'opacity 1.2s ease';
+  setTimeout(() => bg.classList.add('loaded'), 50);
+  saveSession('title');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: STORAGE — データ永続化
+═══════════════════════════════════════════════════════ */
+function saveState() {
+  try { localStorage.setItem(CONFIG.lsKey, JSON.stringify(state)); } catch(e) {}
+}
+function loadState() {
+  try {
+    const r = localStorage.getItem(CONFIG.lsKey);
+    if (r) state = { ...state, ...JSON.parse(r) };
+  } catch(e) {}
+}
+function exportData() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));
+  a.download = 'hoshi_monogatari_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  closeDataMenu();
+}
+function importData(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      state = { ...state, ...JSON.parse(ev.target.result) };
+      saveState(); renderAll();
+      showMessage('読込完了デス🛸 アナタの宇宙が復元されましタ👽️⚡️');
+      closeDataMenu();
+    } catch { alert('読み込み失敗。正しいJSONファイルを選択してください。'); }
+  };
+  r.readAsText(f); e.target.value='';
+}
+function confirmClear() {
+  if (confirm('全ての記録を削除しますか？\nこの操作は取り消せません。')) {
+    state = { memos:[], currentStage:0, totalStages:1, sendCount:0, editingId:null, starTapCounts:{} };
+    saveState(); renderAll(); closeDataMenu();
+    showMessage('全データを削除しましタ。新たな旅が始まりマス🌌');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: MEMO — メモCRUD操作
+═══════════════════════════════════════════════════════ */
+function addOrUpdateMemo() {
+  const input = document.getElementById('memo-input');
+  const text = input.value.trim(); if ([...text].length === 0) return;
+
+  if (state.editingId !== null) {
+    // 編集モード：上書き保存
+    const idx = state.memos.findIndex(m => m.id === state.editingId);
+    if (idx !== -1) {
+      state.memos[idx].text = text;
+      state.memos[idx].edited = new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
+    cancelEdit();
+    updateCharCount(); // 文字カウントリセット
+    saveState(); renderAll();
+    showMessage('記録を更新しましタ。星が磨かれましたネ✨🧬', true);
+    return;
+  }
+
+  // 新規追加
+  const activeStage = Math.floor(state.memos.length / CONFIG.memosPerStage);
+  const canvas = document.getElementById('star-canvas');
+  const mg = 50;
+  const memo = {
+    id: Date.now(), text,
+    date: new Date().toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}),
+    stage: activeStage,
+    x: (mg + Math.random()*(canvas.width - mg*2)) / canvas.width,
+    y: (mg + Math.random()*(canvas.height - mg*2)) / canvas.height,
+    emoji: CONFIG.starEmojis[Math.floor(Math.random()*CONFIG.starEmojis.length)],
+  };
+  state.memos.push(memo);
+  state.sendCount++;
+  state.totalStages = Math.max(state.totalStages, activeStage+1);
+  saveState();
+  input.value = '';
+  updateCharCount(); // 文字カウントリセット
+
+  const stageCount = state.memos.filter(m=>m.stage===activeStage).length;
+  if (stageCount === CONFIG.memosPerStage) setTimeout(()=>showStageClear(activeStage), 400);
+
+  renderAll(); showRandomMessage();
+}
+
+function startEdit(memo) {
+  state.editingId = memo.id;
+  const input = document.getElementById('memo-input');
+  input.value = memo.text;
+  input.focus();
+  updateCharCount(); // 編集中テキストの文字数を反映
+  document.getElementById('edit-mode-bar').classList.add('show');
+  document.getElementById('input-label').textContent = '// EDIT RECORD';
+  document.getElementById('submit-btn').textContent = '✏ 更新';
+}
+
+function cancelEdit() {
+  state.editingId = null;
+  document.getElementById('memo-input').value = '';
+  document.getElementById('edit-mode-bar').classList.remove('show');
+  document.getElementById('input-label').textContent = '// NEW RECORD';
+  document.getElementById('submit-btn').innerHTML = '🌟 星を<br>灯す';
+}
+
+/* ─── ~~テキスト~~ → <del>テキスト</del> 変換 ─── */
+function renderMarkdown(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/~~(.+?)~~/g,'<del>$1</del>');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: MESSAGES — メッセージ表示
+═══════════════════════════════════════════════════════ */
+function showRandomMessage() {
+  let msg, sender;
+  if (state.sendCount % 10 === 0) {
+    msg = MESSAGES.jaco[Math.floor(Math.random()*MESSAGES.jaco.length)];
+    sender = '// J.A.C.O ANNOUNCEMENT';
+  } else {
+    const pool = [...MESSAGES.normal,...MESSAGES.comfort,...MESSAGES.observe,...MESSAGES.humor];
+    msg = pool[Math.floor(Math.random()*pool.length)];
+    sender = '// HIMAJIN TRANSMISSION';
+  }
+  showMessage(msg, true, sender);
+}
+
+function showMessage(msg, animate=false, sender='// HIMAJIN TRANSMISSION') {
+  document.getElementById('message-sender').textContent = sender;
+  document.getElementById('message-text').textContent = msg;
+  if (animate) {
+    const a = document.getElementById('message-area');
+    a.style.borderColor = 'rgba(0,229,255,0.35)';
+    setTimeout(()=>a.style.borderColor='rgba(0,229,255,0.08)', 700);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: STAGE — ステージ制御
+═══════════════════════════════════════════════════════ */
+let _clearingStageIdx = 0; // シェア用に保持
+
+function showStageClear(idx) {
+  _clearingStageIdx = idx;
+  document.getElementById('stage-clear-sub').textContent =
+    `${chapterLabel(idx)} // ${stageName(idx)} — 完了`;
+  document.getElementById('stage-clear').classList.add('show');
+}
+function proceedNextStage() {
+  document.getElementById('stage-clear').classList.remove('show');
+  document.getElementById('share-overlay').classList.remove('show');
+  const next = Math.floor(state.memos.length / CONFIG.memosPerStage);
+  state.currentStage = next;
+  state.totalStages = Math.max(state.totalStages, next+1);
+  saveState(); renderAll();
+}
+
+/* ステージアクセントカラーを適用 */
+function applyStageColor(stageIdx) {
+  const color = CONFIG.stageColors[stageIdx % CONFIG.stageColors.length];
+  document.documentElement.style.setProperty('--stage-accent', color);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: CONSTELLATION SHARE — 星座生成＆Xシェア
+═══════════════════════════════════════════════════════ */
+
+/* ── 星座Canvas描画 ── */
+function drawConstellationCanvas(stageMemos, accentColor) {
+  const cv = document.getElementById('constellation-canvas');
+  const cx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  cx.clearRect(0,0,W,H);
+
+  /* 背景：深宇宙グラデーション */
+  const bg = cx.createRadialGradient(W*.45, H*.4, 0, W*.5, H*.5, W*.7);
+  bg.addColorStop(0, '#0a1628');
+  bg.addColorStop(.55, '#04091a');
+  bg.addColorStop(1, '#01040a');
+  cx.fillStyle = bg; cx.fillRect(0,0,W,H);
+
+  /* 背景の微小星（シードベース再現性あり） */
+  const seed = stageMemos.reduce((a,m)=>a+m.id,0);
+  const rng = seededRng(seed);
+  for (let i=0;i<120;i++) {
+    const x=rng()*W, y=rng()*H, r=rng()*0.9+0.2;
+    const a=0.08+rng()*0.35;
+    cx.beginPath(); cx.arc(x,y,r,0,Math.PI*2);
+    cx.fillStyle=`rgba(255,255,255,${a})`; cx.fill();
+  }
+
+  /* 各メモから星データを計算 */
+  const stars = stageMemos.map((m, i) => {
+    /* 座標: IDのシードから固定位置（再現性） */
+    const r2 = seededRng(m.id + i * 9973);
+    const mg = 38;
+    const x = mg + r2() * (W - mg*2);
+    const y = mg + r2() * (H - mg*2);
+    /* テキストハッシュから唯一無二の星プロパティを生成 */
+    const props = starPropsFromText(m.text);
+    return { x, y, brightness: props.brightness, radius: props.radius, color: props.color, emoji: m.emoji };
+  });
+
+  /* HSL→rgba変換ユーティリティ（Canvas用） */
+  function toRgba(color, alpha) {
+    if (!color.startsWith('hsl')) return color + Math.round(alpha*255).toString(16).padStart(2,'0');
+    const m2 = color.match(/hsl\((\d+),(\d+)%,(\d+)%\)/);
+    if (!m2) return `rgba(255,255,255,${alpha})`;
+    let h=+m2[1]/360, s=+m2[2]/100, l=+m2[3]/100, r,g,b;
+    if(s===0){r=g=b=l;}else{
+      const q=l<0.5?l*(1+s):l+s-l*s, p2=2*l-q;
+      const hue2rgb=(p3,q3,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p3+(q3-p3)*6*t;if(t<1/2)return q3;if(t<2/3)return p3+(q3-p3)*(2/3-t)*6;return p3;};
+      r=hue2rgb(p2,q,h+1/3);g=hue2rgb(p2,q,h);b=hue2rgb(p2,q,h-1/3);
+    }
+    return `rgba(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)},${alpha})`;
+  }
+
+  /* 星座ライン（細く神秘的に） */
+  if (stars.length >= 2) {
+    for (let i=0; i<stars.length-1; i++) {
+      const a = stars[i], b = stars[i+1];
+      const grad = cx.createLinearGradient(a.x,a.y,b.x,b.y);
+      grad.addColorStop(0, toRgba(a.color, 0.33));
+      grad.addColorStop(1, toRgba(b.color, 0.33));
+      cx.beginPath(); cx.moveTo(a.x,a.y); cx.lineTo(b.x,b.y);
+      cx.strokeStyle=grad; cx.lineWidth=0.8; cx.stroke();
+    }
+    /* 最初と最後を結ぶ閉じた線（薄く） */
+    const first = stars[0], last = stars[stars.length-1];
+    cx.beginPath(); cx.moveTo(last.x,last.y); cx.lineTo(first.x,first.y);
+    cx.strokeStyle=`rgba(255,255,255,0.08)`; cx.lineWidth=0.5; cx.stroke();
+  }
+
+  /* 各星を描画 */
+  stars.forEach((s, i) => {
+    const p = s.brightness;
+    /* 外側グロー */
+    const glow = cx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.radius*5*p);
+    glow.addColorStop(0, toRgba(s.color, 0.53));
+    glow.addColorStop(.4, toRgba(s.color, 0.13));
+    glow.addColorStop(1, toRgba(s.color, 0));
+    cx.beginPath(); cx.arc(s.x,s.y,s.radius*5*p,0,Math.PI*2);
+    cx.fillStyle=glow; cx.fill();
+    /* 星本体 */
+    cx.beginPath(); cx.arc(s.x,s.y,s.radius*p,0,Math.PI*2);
+    cx.fillStyle=s.color;
+    cx.shadowColor=s.color; cx.shadowBlur=12*p;
+    cx.fill(); cx.shadowBlur=0;
+    /* 番号ラベル */
+    cx.fillStyle=`rgba(255,255,255,0.5)`;
+    cx.font=`600 8px 'Orbitron',monospace`;
+    cx.textAlign='center';
+    cx.fillText(`#${String(i+1).padStart(2,'0')}`, s.x, s.y+s.radius*p+11);
+  });
+
+  /* ウォーターマーク */
+  cx.fillStyle='rgba(255,255,255,0.12)';
+  cx.font=`700 9px 'Orbitron',monospace`;
+  cx.textAlign='right';
+  cx.fillText('星ヲ巡る旅 #hoshi_tabi', W-10, H-8);
+
+  return stars;
+}
+
+/* ── シードベース乱数（再現性のある星配置） ── */
+function seededRng(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s ^ (s << 13)) >>> 0;
+    s = (s ^ (s >> 17)) >>> 0;
+    s = (s ^ (s << 5)) >>> 0;
+    return (s >>> 0) / 4294967296;
+  };
+}
+
+/* ── シェアオーバーレイを開く ── */
+function openShareOverlay() {
+  document.getElementById('stage-clear').classList.remove('show');
+  const idx = _clearingStageIdx;
+  const stageMemos = state.memos.filter(m=>m.stage===idx);
+  const accentColor = CONFIG.stageColors[idx % CONFIG.stageColors.length];
+
+  /* パネルサブタイトル */
+  document.getElementById('share-panel-sub').textContent =
+    `${chapterLabel(idx)} // ${stageName(idx)} — 7つの記憶で紡がれた星座`;
+
+  /* メタ情報 */
+  const totalChars = stageMemos.reduce((a,m)=>a+getXWeightedLength(m.text),0);
+  const tapCount = (state.starTapCounts && state.starTapCounts[idx]) ? state.starTapCounts[idx] : 0;
+  document.getElementById('meta-stars').textContent = stageMemos.length;
+  document.getElementById('meta-chars').textContent = totalChars;
+  document.getElementById('meta-brightest').textContent = tapCount;
+
+  /* 星座描画 */
+  drawConstellationCanvas(stageMemos, accentColor);
+
+  /* 物語の断片リセット */
+  const frag = document.getElementById('share-fragment');
+  frag.value='';
+  document.getElementById('fragment-count').textContent='0';
+
+  document.getElementById('share-overlay').classList.add('show');
+}
+
+function closeShareOverlay() {
+  document.getElementById('share-overlay').classList.remove('show');
+  proceedNextStage();
+}
+
+/* ── X（旧Twitter）仕様準拠の文字カウント ──
+   全角文字（ひらがな・カタカナ・漢字・絵文字・全角記号など）は2文字、
+   半角英数字・半角記号は1文字としてカウントしマス。
+   ※Xの公式アルゴリズム（twitter-text）を簡易再現したものデス。結合絵文字（家族絵文字など）や
+   異体字セレクタなど、ごく一部の特殊なケースでは公式カウントと若干ズレる可能性がありマス。 */
+const X_WEIGHTED_RANGES = [
+  [0x1100, 0x115F],   // ハングル字母
+  [0x2600, 0x27BF],   // 記号・絵文字（一般記号・装飾記号）
+  [0x2E80, 0x303E],   // CJK部首補助・CJK記号と句読点
+  [0x3041, 0x33FF],   // ひらがな・カタカナ・注音字母・CJK互換等
+  [0x3400, 0x4DBF],   // CJK統合漢字拡張A
+  [0x4E00, 0x9FFF],   // CJK統合漢字
+  [0xA000, 0xA4CF],   // 彝（イ）文字
+  [0xAC00, 0xD7A3],   // ハングル音節
+  [0xF900, 0xFAFF],   // CJK互換漢字
+  [0xFE30, 0xFE4F],   // CJK互換形
+  [0xFF00, 0xFF60],   // 全角形（全角英数・全角記号）
+  [0xFFE0, 0xFFE6],   // 全角記号
+  [0x1F300, 0x1FAFF], // 絵文字全般（顔文字・乗り物・物体等）
+  [0x20000, 0x2FFFD], // CJK統合漢字拡張B以降
+  [0x30000, 0x3FFFD],
+];
+function isXWideChar(codePoint) {
+  for (let i = 0; i < X_WEIGHTED_RANGES.length; i++) {
+    const [start, end] = X_WEIGHTED_RANGES[i];
+    if (codePoint >= start && codePoint <= end) return true;
+    if (codePoint < start) break; /* 昇順なのでこれ以降は該当なし */
+  }
+  return false;
+}
+function getXWeightedLength(text) {
+  const chars = Array.from(text); /* サロゲートペア対応の正しい文字単位分割 */
+  let weight = 0;
+  for (const ch of chars) {
+    const cp = ch.codePointAt(0);
+    weight += isXWideChar(cp) ? 2 : 1;
+  }
+  return weight;
+}
+function trimToXWeightedLimit(text, limit) {
+  const chars = Array.from(text);
+  let weight = 0;
+  let cutIndex = chars.length;
+  for (let i = 0; i < chars.length; i++) {
+    const w = isXWideChar(chars[i].codePointAt(0)) ? 2 : 1;
+    if (weight + w > limit) { cutIndex = i; break; }
+    weight += w;
+  }
+  return chars.slice(0, cutIndex).join('');
+}
+
+/* ── 文字カウント更新（X仕様の重み付けカウント） ── */
+function updateCharCount() {
+  const ta = document.getElementById('memo-input');
+  const counter = document.getElementById('char-count');
+  const max = parseInt(ta.getAttribute('data-weighted-max')) || 200;
+
+  /* 重み付け文字数が上限を超えていたら切り詰める（カーソル末尾想定） */
+  let weighted = getXWeightedLength(ta.value);
+  if (weighted > max) {
+    const trimmed = trimToXWeightedLimit(ta.value, max);
+    if (trimmed !== ta.value) {
+      ta.value = trimmed;
+      weighted = getXWeightedLength(ta.value);
+    }
+  }
+
+  counter.textContent = `${weighted}/${max}`;
+  counter.classList.remove('near-limit','at-limit');
+  if (weighted >= max * 0.95) counter.classList.add('at-limit');
+  else if (weighted >= max * 0.5) counter.classList.add('near-limit');
+  /* 入力中テキストをセッションに保存 */
+  saveSession('app');
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  const frag = document.getElementById('share-fragment');
+  if(frag) frag.addEventListener('input', ()=>{
+    document.getElementById('fragment-count').textContent = frag.value.length;
+  });
+});
+
+/* ── Xへシェア ── */
+function shareToX() {
+  const fragment = document.getElementById('share-fragment').value.trim();
+  const idx = _clearingStageIdx;
+  const stageNameStr = stageName(idx);
+  const stageMemos = state.memos.filter(m=>m.stage===idx);
+  const totalChars = stageMemos.reduce((a,m)=>a+getXWeightedLength(m.text),0);
+
+  let text = `🌟星ヲ巡る旅🌌\n\n`;
+  text += `7つのメモから生まれた星座を観測しました🪐\n\n`;
+  text += `これは、日々の言葉が紡ぐ物語――\n\n`;
+  if (fragment) text += `「${fragment}」\n\n`;
+  text += `${chapterLabel(idx)} // ${stageNameStr}\n`;
+  text += `✦ ${stageMemos.length} stars ✦ ${totalChars} chars\n\n`;
+  text += `#星ヲ巡る旅\n\n`;
+  text += `${CONFIG.shareUrl}`;
+
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank', 'width=580,height=480');
+}
+
+/* ── 星座画像をダウンロード保存 ── */
+function saveConstellationImage() {
+  const cv = document.getElementById('constellation-canvas');
+  const idx = _clearingStageIdx;
+  const link = document.createElement('a');
+  link.download = `hoshi_tabi_ch${String(idx+1).padStart(2,'0')}_constellation.png`;
+  link.href = cv.toDataURL('image/png');
+  link.click();
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: POPUP — ポップアップ
+═══════════════════════════════════════════════════════ */
+function openPopup(memo) {
+  document.getElementById('popup-star').textContent = memo.emoji;
+  document.getElementById('popup-date').textContent =
+    memo.date + (memo.edited ? `\n✏ 編集: ${memo.edited}` : '');
+  document.getElementById('popup-body').innerHTML = renderMarkdown(memo.text);
+  document.getElementById('popup-overlay').classList.add('show');
+}
+function closePopup(e) {
+  if (!e || e.target===document.getElementById('popup-overlay') || e.currentTarget.classList.contains('popup-close'))
+    document.getElementById('popup-overlay').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: DATA MENU — データ管理メニュー
+═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: TIMEWARP — 日付検索・タイムワープ
+═══════════════════════════════════════════════════════ */
+let _calYear = 0, _calMonth = 0, _timewarpTarget = null;
+
+/* メモのある日付セットを取得（YYYY-MM-DD形式） */
+function getMemoDateSet() {
+  const s = new Set();
+  state.memos.forEach(m => {
+    if (m.date) {
+      /* date形式: "YYYY/MM/DD HH:MM" → "YYYY-MM-DD" */
+      const d = m.date.replace(/\//g,'-').split(' ')[0];
+      s.add(d);
+    }
+  });
+  return s;
+}
+
+function openCalendar() {
+  const now = new Date();
+  _calYear = now.getFullYear();
+  _calMonth = now.getMonth();
+  renderCalendar();
+  document.getElementById('cal-overlay').classList.add('show');
+}
+function closeCalendar() {
+  document.getElementById('cal-overlay').classList.remove('show');
+}
+function closeCalendarOutside(e) {
+  if (e.target === document.getElementById('cal-overlay')) closeCalendar();
+}
+function calPrevMonth() {
+  _calMonth--;
+  if (_calMonth < 0) { _calMonth = 11; _calYear--; }
+  renderCalendar();
+}
+function calNextMonth() {
+  _calMonth++;
+  if (_calMonth > 11) { _calMonth = 0; _calYear++; }
+  renderCalendar();
+}
+function renderCalendar() {
+  const label = document.getElementById('cal-month-label');
+  label.textContent = `${_calYear} / ${String(_calMonth+1).padStart(2,'0')}`;
+
+  const memoDateSet = getMemoDateSet();
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const firstDay = new Date(_calYear, _calMonth, 1).getDay();
+  const daysInMonth = new Date(_calYear, _calMonth+1, 0).getDate();
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  /* 空白セル */
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+  /* 日付セル */
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasMemo = memoDateSet.has(dateStr);
+    const isToday = dateStr === todayStr;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day' + (hasMemo ? ' has-memo' : ' no-memo') + (isToday ? ' today' : '');
+    cell.textContent = d;
+    if (hasMemo) {
+      cell.addEventListener('click', () => selectCalDate(dateStr));
+    }
+    grid.appendChild(cell);
+  }
+}
+function selectCalDate(dateStr) {
+  closeCalendar();
+  _timewarpTarget = dateStr;
+  /* タイムワープ確認ダイアログ表示 */
+  const [y,m,d] = dateStr.split('-');
+  document.getElementById('timewarp-date').textContent = `${y} / ${m} / ${d}`;
+  document.getElementById('timewarp-overlay').classList.add('show');
+}
+function closeTimewarp() {
+  document.getElementById('timewarp-overlay').classList.remove('show');
+  _timewarpTarget = null;
+}
+function doTimewarp() {
+  document.getElementById('timewarp-overlay').classList.remove('show');
+  if (!_timewarpTarget) return;
+  if (_timewarpTarget === '__now__') { executeReturnNow(); return; }
+  /* ノイズエフェクト → ジャンプ */
+  triggerNoise(() => {
+    /* 対象日付のメモが属する章を探す */
+    const dateStr = _timewarpTarget;
+    const targetMemo = state.memos.find(m => m.date && m.date.replace(/\//g,'-').split(' ')[0] === dateStr);
+    if (!targetMemo) return;
+    const targetStage = targetMemo.stage ?? 0;
+    /* 章ジャンプ */
+    state.currentStage = targetStage;
+    renderAll();
+    /* ハイライト対象メモID群を設定 */
+    const dayMemoIds = new Set(
+      state.memos
+        .filter(m => m.date && m.date.replace(/\//g,'-').split(' ')[0] === dateStr)
+        .map(m => m.id)
+    );
+    _timewarpHighlight = dayMemoIds;
+    /* 「今」に戻るバー表示 */
+    document.getElementById('return-now-bar').classList.add('show');
+  });
+}
+function returnToNow() {
+  /* 確認ダイアログ（再利用） */
+  _timewarpTarget = '__now__';
+  document.getElementById('timewarp-date').textContent = '現在時刻 // NOW';
+  document.getElementById('timewarp-overlay').classList.add('show');
+}
+function executeReturnNow() {
+  triggerNoise(() => {
+    _timewarpHighlight = null;
+    /* 最新章へ */
+    const activeStage = Math.floor(state.memos.length / CONFIG.memosPerStage);
+    state.currentStage = Math.max(0, activeStage);
+    renderAll();
+    document.getElementById('return-now-bar').classList.remove('show');
+  });
+}
+function triggerNoise(callback) {
+  const nc = document.getElementById('noise-canvas');
+  /* canvasサイズをcanvas-sectionに合わせる */
+  const section = nc.parentElement;
+  nc.width  = section.offsetWidth;
+  nc.height = section.offsetHeight;
+  const nctx = nc.getContext('2d');
+  nc.style.opacity = '1';
+
+  const DURATION = 1800; // ms（ゆっくりに）
+  const start = performance.now();
+
+  function drawSandstorm(t) {
+    const progress = t / DURATION;
+    /* フェードイン(0〜40%)→ピーク(40〜60%)→フェードアウト(60〜100%) */
+    const alpha = progress < 0.4
+      ? progress / 0.4
+      : progress < 0.6
+        ? 1
+        : 1 - (progress - 0.6) / 0.4;
+
+    nctx.clearRect(0, 0, nc.width, nc.height);
+
+    /* ランダムなピクセルノイズ（砂嵐） */
+    const imageData = nctx.createImageData(nc.width, nc.height);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? Math.floor(Math.random() * 255) : 0;
+      data[i]   = v;
+      data[i+1] = v;
+      data[i+2] = v + Math.floor(Math.random() * 30); /* 少し青みがかった砂嵐 */
+      data[i+3] = Math.floor(alpha * 180);
+    }
+    nctx.putImageData(imageData, 0, 0);
+
+    /* ランダムな横スキャンライン */
+    const lineCount = Math.floor(alpha * 12);
+    for (let l = 0; l < lineCount; l++) {
+      const y = Math.floor(Math.random() * nc.height);
+      const h = Math.floor(Math.random() * 4) + 1;
+      nctx.fillStyle = `rgba(0,229,255,${Math.random() * 0.3 * alpha})`;
+      nctx.fillRect(0, y, nc.width, h);
+    }
+  }
+
+  let callbackFired = false;
+  function frame(now) {
+    const t = now - start;
+    if (t >= DURATION) {
+      nctx.clearRect(0, 0, nc.width, nc.height);
+      nc.style.opacity = '0';
+      if (!callbackFired) { callbackFired = true; callback && callback(); }
+      return;
+    }
+    drawSandstorm(t);
+    /* コールバックはピーク直後（55%）に実行してジャンプを砂嵐中に隠す */
+    if (!callbackFired && t / DURATION >= 0.55) {
+      callbackFired = true;
+      callback && callback();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function openDataMenu() { document.getElementById('data-menu-overlay').classList.add('show'); }
+function closeDataMenu(e) {
+  if (!e || e.target===document.getElementById('data-menu-overlay') || e.currentTarget.classList.contains('data-menu-close'))
+    document.getElementById('data-menu-overlay').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: RENDER — レンダリング
+═══════════════════════════════════════════════════════ */
+function renderAll() {
+  applyStageColor(state.currentStage);
+  renderMemoList();
+  renderStageButtons();
+  renderProgress();
+  renderStageName();
+}
+
+function renderMemoList() {
+  const list = document.getElementById('memo-list');
+  const sm = state.memos.filter(m => m.stage === state.currentStage);
+  if (!sm.length) {
+    list.innerHTML = '<div style="padding:20px 14px;text-align:center;font-size:11px;color:var(--dim);font-family:Orbitron,monospace;letter-spacing:1px;">NO RECORDS YET<br><span style="font-size:20px;opacity:.25">🌌</span></div>';
+    return;
+  }
+  list.innerHTML = [...sm].reverse().map((m, ri) => {
+    const i = sm.length-1-ri;
+    return `<div class="memo-item">
+      <span class="memo-star-icon" onclick='openPopup(${JSON.stringify(m)})'>${m.emoji}</span>
+      <div class="memo-content" onclick='openPopup(${JSON.stringify(m)})'>
+        <div class="memo-date">${m.date}${m.edited?' ✏':''}</div>
+        <div class="memo-text">${renderMarkdown(m.text)}</div>
+      </div>
+      <button class="memo-edit-btn" onclick='startEdit(${JSON.stringify(m)})'>EDIT</button>
+      <span class="memo-idx">#${String(i+1).padStart(2,'0')}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderStageButtons() {
+  const c = document.getElementById('stage-btns'); c.innerHTML='';
+  for (let i=0; i<state.totalStages; i++) {
+    const b = document.createElement('button');
+    b.className = 'stage-dot' + (i===state.currentStage?' active':'');
+    b.title = chapterLabel(i);
+    b.onclick = () => { state.currentStage=i; renderAll(); };
+    c.appendChild(b);
+  }
+}
+
+function renderProgress() {
+  const active = Math.floor(state.memos.length / CONFIG.memosPerStage);
+  const count = state.memos.filter(m=>m.stage===state.currentStage).length;
+  document.getElementById('progress-count').textContent =
+    state.currentStage===active ? `${count} / ${CONFIG.memosPerStage}` : `${count} / ${CONFIG.memosPerStage} ✓`;
+  document.getElementById('progress-fill').style.width = Math.min(count/CONFIG.memosPerStage*100,100)+'%';
+}
+
+function renderStageName() {
+  const n = state.currentStage;
+  document.getElementById('canvas-stage-label').textContent =
+    `${chapterLabel(n)} // ${stageName(n)}`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: CANVAS — 星空描画
+═══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('star-canvas');
+const ctx = canvas.getContext('2d');
+const bgStars = [];
+let tick = 0;
+let animFrame;
+
+/* 背景星の初期化 */
+function initBgStars() {
+  bgStars.length = 0;
+  for (let i=0; i<CONFIG.bgStarCount; i++) {
+    bgStars.push({
+      x: Math.random(), y: Math.random(),
+      r: Math.random()*1.3+0.2,
+      speed: 0.002+Math.random()*0.007,
+      phase: Math.random()*Math.PI*2,
+      // 引力エフェクト用の元座標
+      ox: Math.random(), oy: Math.random(),
+    });
+    bgStars[bgStars.length-1].ox = bgStars[bgStars.length-1].x;
+    bgStars[bgStars.length-1].oy = bgStars[bgStars.length-1].y;
+  }
+}
+
+function resizeCanvas() {
+  const sec = document.querySelector('.canvas-section');
+  canvas.width = sec.clientWidth;
+  canvas.height = sec.clientHeight;
+}
+
+/* ─── メインドローループ ─── */
+function draw() {
+  tick++;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  /* shadow系を毎フレーム確実にリセット */
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur  = 0;
+
+  /* ステージごとに背景色相を変化 */
+  const stageHue = (state.currentStage * 40) % 360;
+  const grad = ctx.createRadialGradient(canvas.width*.45,canvas.height*.35,0,canvas.width*.5,canvas.height*.5,canvas.width*.9);
+  grad.addColorStop(0, `hsl(${stageHue},60%,6%)`);
+  grad.addColorStop(.5, `hsl(${(stageHue+20)%360},40%,3%)`);
+  grad.addColorStop(1, '#01040a');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  /* 背景小星（引力エフェクト付き） */
+  bgStars.forEach(s => {
+    /* 引力：pointerに向かって少し引き寄せる */
+    if (pointer.active) {
+      const sx = s.x*canvas.width, sy = s.y*canvas.height;
+      const dx = pointer.x-sx, dy = pointer.y-sy;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if (dist < CONFIG.gravityRadius && dist > 1) {
+        const force = (1-dist/CONFIG.gravityRadius) * CONFIG.gravityStrength / canvas.width;
+        s.x += dx/dist * force * 0.015;
+        s.y += dy/dist * force * 0.015 * (canvas.width/canvas.height);
+      }
+    }
+    /* 元座標に戻す — active中のみ（touchend時にox/oyへ即スナップ済みのため） */
+    if (pointer.active) {
+      s.x += (s.ox - s.x) * 0.04;
+      s.y += (s.oy - s.y) * 0.04;
+    }
+
+    const a = 0.12+0.55*(0.5+0.5*Math.sin(tick*s.speed+s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x*canvas.width, s.y*canvas.height, s.r, 0, Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
+  });
+
+  /* 現ステージのメモ星 */
+  const sm = state.memos.filter(m=>m.stage===state.currentStage);
+
+  /* 星座ライン */
+  if (sm.length>=2) {
+    ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=0.7; ctx.beginPath();
+    sm.forEach((m,i)=>{ const x=m.x*canvas.width,y=m.y*canvas.height; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+
+  /* 各メモ星 */
+  sm.forEach((m,i)=>{
+    let x=m.x*canvas.width, y=m.y*canvas.height;
+
+    /* 引力で星本体も少し揺れる */
+    if (pointer.active) {
+      const dx=pointer.x-x, dy=pointer.y-y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if (dist<CONFIG.gravityRadius*1.5 && dist>1) {
+        const force=(1-dist/(CONFIG.gravityRadius*1.5))*30;
+        x += dx/dist*force*0.03;
+        y += dy/dist*force*0.03;
+      }
+    }
+
+    const p = 0.72+0.28*Math.sin(tick*0.022+i*1.4);
+    /* テキストから色を取得（絵文字・記号含む全文字列を使用） */
+    const starColor = m.color || starPropsFromText(m.text).color;
+    /* HSL→rgba変換（Canvas用） */
+    function hslToRgba(hslStr, alpha) {
+      const m2 = hslStr.match(/hsl\((\d+),(\d+)%,(\d+)%\)/);
+      if (!m2) return `rgba(255,255,255,${alpha})`;
+      let h=+m2[1]/360, s=+m2[2]/100, l=+m2[3]/100;
+      let r,g,b;
+      if(s===0){r=g=b=l;}else{
+        const q=l<0.5?l*(1+s):l+s-l*s, p2=2*l-q;
+        const hue2rgb=(p3,q3,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p3+(q3-p3)*6*t;if(t<1/2)return q3;if(t<2/3)return p3+(q3-p3)*(2/3-t)*6;return p3;};
+        r=hue2rgb(p2,q,h+1/3);g=hue2rgb(p2,q,h);b=hue2rgb(p2,q,h-1/3);
+      }
+      return `rgba(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)},${alpha})`;
+    }
+    const colorFull = starColor.startsWith('hsl') ? hslToRgba(starColor, 0.73) : starColor+'bb';
+    const colorDim  = starColor.startsWith('hsl') ? hslToRgba(starColor, 0.16) : starColor+'28';
+    const colorZero = starColor.startsWith('hsl') ? hslToRgba(starColor, 0)    : starColor+'00';
+    /* グロー（lighter合成で黒い円を防ぐ） */
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glow=ctx.createRadialGradient(x,y,0,x,y,32*p);
+    glow.addColorStop(0,colorFull); glow.addColorStop(.45,colorDim); glow.addColorStop(1,colorZero);
+    ctx.beginPath(); ctx.arc(x,y,32*p,0,Math.PI*2); ctx.fillStyle=glow; ctx.fill();
+    ctx.restore();
+    /* 本体 */
+    ctx.save();
+    ctx.beginPath(); ctx.arc(x,y,5.5*p,0,Math.PI*2);
+    ctx.fillStyle=starColor; ctx.shadowColor=starColor; ctx.shadowBlur=16*p; ctx.fill();
+    ctx.restore();
+    /* タイムワープハイライトリング */
+    if (_timewarpHighlight && _timewarpHighlight.has(m.id)) {
+      const ringR = 10 + 4*Math.sin(tick*0.06);
+      ctx.save();
+      ctx.beginPath(); ctx.arc(x,y,ringR,0,Math.PI*2);
+      ctx.strokeStyle='rgba(123,97,255,0.85)'; ctx.lineWidth=1.5;
+      ctx.shadowColor='rgba(123,97,255,0.8)'; ctx.shadowBlur=12;
+      ctx.stroke();
+      ctx.restore();
+    }
+    /* ラベル */
+    ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font="700 8px 'Orbitron',monospace"; ctx.textAlign='center';
+    ctx.fillText(`#${String(i+1).padStart(2,'0')}`,x,y+18);
+  });
+
+  animFrame=requestAnimationFrame(draw);
+}
+
+/* ─── 引力エフェクト：マウス/タッチイベント ─── */
+function updatePointer(x, y) {
+  const rect = canvas.getBoundingClientRect();
+  pointer.x = x - rect.left;
+  pointer.y = y - rect.top;
+  pointer.active = true;
+  /* 星の上ではポインターカーソル */
+  const hit = findTappedStar(pointer.x, pointer.y);
+  canvas.style.cursor = hit ? 'pointer' : 'crosshair';
+}
+canvas.addEventListener('mousemove', e=>updatePointer(e.clientX,e.clientY));
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+  /* 動いたら長押しキャンセル */
+  cancelHold();
+}, { passive: false });
+canvas.addEventListener('mouseleave', ()=>{ pointer.active=false; pointer.releasedAt=performance.now(); bgStars.forEach(s=>{s.x=s.ox;s.y=s.oy;}); });
+
+/* ─── タッチ統合ハンドラ ─── */
+/* touchstart: 引力開始 ＋ 星タップ ＋ 長押し開始（1箇所にまとめ） */
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1) return;
+  const t = e.touches[0];
+  /* 引力 */
+  updatePointer(t.clientX, t.clientY);
+  /* 星タップ */
+  const { x, y } = getCanvasPos(t.clientX, t.clientY);
+  const hit = findTappedStar(x, y);
+  if (hit) {
+    e.preventDefault();
+    highlightMemoItem(hit.memo, hit.localIdx);
+  }
+  /* 長押し */
+  holdTouchId = t.identifier;
+  startHoldProgress(t.clientX, t.clientY);
+}, { passive: false });
+
+/* touchend: 引力停止 ＋ 長押しキャンセル */
+canvas.addEventListener('touchend', e => {
+  pointer.active = false;
+  bgStars.forEach(s => { s.x = s.ox; s.y = s.oy; });
+  cancelHold();
+});
+
+/* touchcancel: 同上 */
+canvas.addEventListener('touchcancel', () => {
+  pointer.active = false;
+  bgStars.forEach(s => { s.x = s.ox; s.y = s.oy; });
+  cancelHold();
+});
+
+/* ─── 星タップ → 紐づきメモを点滅 ─── */
+function getCanvasPos(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return { x: clientX - rect.left, y: clientY - rect.top };
+}
+
+function findTappedStar(cx, cy) {
+  const sm = state.memos.filter(m=>m.stage===state.currentStage);
+  /* 逆順（手前の星を優先）で当たり判定 */
+  for (let i = sm.length-1; i >= 0; i--) {
+    const m = sm[i];
+    const sx = m.x * canvas.width;
+    const sy = m.y * canvas.height;
+    const dist = Math.sqrt((cx-sx)**2 + (cy-sy)**2);
+    if (dist < 26) return { memo: m, localIdx: i };
+  }
+  return null;
+}
+
+function highlightMemoItem(memo, localIdx) {
+  /* 星タップ回数をカウントアップ */
+  const stage = state.currentStage;
+  if (!state.starTapCounts) state.starTapCounts = {};
+  state.starTapCounts[stage] = (state.starTapCounts[stage] || 0) + 1;
+  saveState();
+  /* メモリスト内の対応する要素を特定（逆順表示なので注意） */
+  const list = document.getElementById('memo-list');
+  const items = list.querySelectorAll('.memo-item');
+  const sm = state.memos.filter(m=>m.stage===state.currentStage);
+  /* renderMemoListは逆順なので items[0] = sm[sm.length-1] */
+  const displayIdx = sm.length - 1 - localIdx;
+  const el = items[displayIdx];
+  if (!el) return;
+  /* スクロールして見せる */
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  /* 点滅アニメーション（二重実行防止） */
+  el.classList.remove('star-highlight');
+  void el.offsetWidth; /* reflow */
+  el.classList.add('star-highlight');
+  el.addEventListener('animationend', () => el.classList.remove('star-highlight'), { once: true });
+}
+
+canvas.addEventListener('click', e => {
+  const { x, y } = getCanvasPos(e.clientX, e.clientY);
+  const hit = findTappedStar(x, y);
+  if (hit) highlightMemoItem(hit.memo, hit.localIdx);
+});
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: SNAPSHOT — 長押し/ダブルクリックで星座保存
+═══════════════════════════════════════════════════════ */
+const HOLD_DURATION = 5000; // 5秒
+let holdTimer = null;
+let holdStartTime = null;
+let holdRafId = null;
+let holdTouchId = null;
+
+const holdRingEl = document.getElementById('canvas-hold-ring');
+const ringCircle = document.getElementById('ring-fill-circle');
+const RING_CIRCUMFERENCE = 125.66; // 2π×20
+
+function startHoldProgress(clientX, clientY) {
+  cancelHold();
+  holdStartTime = performance.now();
+  /* リングをCanvas座標に配置（中央24pxオフセット） */
+  const rect = canvas.getBoundingClientRect();
+  const px = clientX - rect.left - 24;
+  const py = clientY - rect.top - 24;
+  holdRingEl.style.left = px + 'px';
+  holdRingEl.style.top  = py + 'px';
+  holdRingEl.style.display = 'block';
+  ringCircle.style.strokeDashoffset = RING_CIRCUMFERENCE;
+
+  function animate(now) {
+    const elapsed = now - holdStartTime;
+    const progress = Math.min(elapsed / HOLD_DURATION, 1);
+    ringCircle.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - progress);
+    if (progress < 1) {
+      holdRafId = requestAnimationFrame(animate);
+    } else {
+      cancelHold();
+      openSnapshotConfirm();
+    }
+  }
+  holdRafId = requestAnimationFrame(animate);
+
+  holdTimer = setTimeout(() => {
+    /* rAFループが完了してから呼ばれる場合のフォールバック */
+  }, HOLD_DURATION + 100);
+}
+
+function cancelHold() {
+  if (holdRafId) { cancelAnimationFrame(holdRafId); holdRafId = null; }
+  if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+  holdStartTime = null;
+  holdTouchId = null;
+  holdRingEl.style.display = 'none';
+}
+
+/* PCダブルクリック */
+canvas.addEventListener('dblclick', e => {
+  cancelHold();
+  openSnapshotConfirm();
+});
+
+/* 確認ダイアログを開く */
+function openSnapshotConfirm() {
+  document.getElementById('snapshot-confirm-overlay').classList.add('show');
+}
+
+/* 「はい」→ 保存（同期・ユーザー操作起点で即実行）→ 流れ星エフェクト */
+function confirmSnapshotYes() {
+  document.getElementById('snapshot-confirm-overlay').classList.remove('show');
+  saveCurrentConstellationSnapshot(); /* ← クリック直後に同期実行 */
+  setTimeout(() => launchShootingStars(), 80); /* エフェクトは少し後 */
+}
+
+/* 「いいえ」→ 閉じるだけ */
+function confirmSnapshotNo() {
+  document.getElementById('snapshot-confirm-overlay').classList.remove('show');
+}
+
+/* 流れ星を1本だけ Canvas上に描画（右上→左下、残像付き） */
+function launchShootingStars() {
+  /* 専用オーバーレイCanvas を生成（既存のstar-canvasとは別） */
+  const overlay = document.getElementById('shooting-star-overlay');
+  const oc = document.createElement('canvas');
+  oc.width  = canvas.offsetWidth;
+  oc.height = canvas.offsetHeight;
+  oc.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
+  overlay.appendChild(oc);
+  const ctx = oc.getContext('2d');
+
+  const W = oc.width;
+  const H = oc.height;
+
+  /* 流れ星パラメータ：右端上方から左端下方へ斜めに横断 */
+  const angle = Math.PI * (15 + Math.random() * 10) / 180; /* 15〜25度 */
+  const speed = W * 0.022; /* 1フレームあたりの移動量 */
+  const tailLen = W * 0.28; /* 残像の長さ（画面幅の28%） */
+  const totalDist = W * 1.35; /* 星が消えるまでの総移動距離 */
+
+  /* 開始位置：右端から少し外側、上から15〜30%の位置 */
+  let x = W * (0.88 + Math.random() * 0.18);
+  let y = H * (0.08 + Math.random() * 0.18);
+  let dist = 0;
+  let rafId;
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+
+    /* 先端位置 */
+    const headX = x - Math.cos(angle) * dist;
+    const headY = y + Math.sin(angle) * dist;
+
+    /* 残像の末端（先端より後ろ tailLen 分） */
+    const tailDist = Math.max(0, dist - tailLen);
+    const tailX = x - Math.cos(angle) * tailDist;
+    const tailY = y + Math.sin(angle) * tailDist;
+
+    /* 全体の進捗（0→1）でフェードアウト */
+    const progress = dist / totalDist;
+    const alpha = progress < 0.75 ? 1.0 : 1.0 - (progress - 0.75) / 0.25;
+
+    /* グラデーション：先端=白、末端=透明 */
+    const grad = ctx.createLinearGradient(tailX, tailY, headX, headY);
+    grad.addColorStop(0, `rgba(255,255,255,0)`);
+    grad.addColorStop(0.6, `rgba(180,220,255,${(alpha * 0.5).toFixed(2)})`);
+    grad.addColorStop(1, `rgba(255,255,255,${alpha.toFixed(2)})`);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    /* 残像ライン */
+    ctx.beginPath();
+    ctx.moveTo(tailX, tailY);
+    ctx.lineTo(headX, headY);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    /* 先端グロー */
+    ctx.beginPath();
+    ctx.arc(headX, headY, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(220,240,255,${alpha.toFixed(2)})`;
+    ctx.shadowColor = 'rgba(0,229,255,0.9)';
+    ctx.shadowBlur = 12;
+    ctx.fill();
+    ctx.restore();
+
+    dist += speed;
+    if (dist < totalDist) {
+      rafId = requestAnimationFrame(drawFrame);
+    } else {
+      ctx.clearRect(0, 0, W, H);
+      overlay.removeChild(oc);
+    }
+  }
+
+  rafId = requestAnimationFrame(drawFrame);
+}
+
+/* 引力エフェクトなしの静止スナップショットをオフスクリーンCanvasに描画して保存 */
+function saveCurrentConstellationSnapshot() {
+  const W = canvas.width;
+  const H = canvas.height;
+  const offscreen = document.createElement('canvas');
+  offscreen.width  = W;
+  offscreen.height = H;
+  const oc = offscreen.getContext('2d');
+
+  /* ── 背景グラデーション ── */
+  const stageHue = (state.currentStage * 40) % 360;
+  const grad = oc.createRadialGradient(W*.45, H*.35, 0, W*.5, H*.5, W*.9);
+  grad.addColorStop(0, `hsl(${stageHue},60%,6%)`);
+  grad.addColorStop(.5, `hsl(${(stageHue+20)%360},40%,3%)`);
+  grad.addColorStop(1, '#01040a');
+  oc.fillStyle = grad; oc.fillRect(0, 0, W, H);
+
+  /* ── 背景小星（元座標のまま・引力なし） ── */
+  bgStars.forEach(s => {
+    const a = 0.12 + 0.55 * (0.5 + 0.5 * Math.sin(tick * s.speed + s.phase));
+    oc.beginPath();
+    oc.arc(s.ox * W, s.oy * H, s.r, 0, Math.PI * 2);
+    oc.fillStyle = `rgba(255,255,255,${a})`; oc.fill();
+  });
+
+  /* ── HSL→rgba変換 ── */
+  function hslToRgba(hslStr, alpha) {
+    const m2 = hslStr.match(/hsl\((\d+),(\d+)%,(\d+)%\)/);
+    if (!m2) return `rgba(255,255,255,${alpha})`;
+    let h=+m2[1]/360, s=+m2[2]/100, l=+m2[3]/100, r, g, b;
+    if (s===0) { r=g=b=l; } else {
+      const q=l<0.5?l*(1+s):l+s-l*s, p2=2*l-q;
+      const hue2rgb=(p3,q3,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p3+(q3-p3)*6*t;if(t<1/2)return q3;if(t<2/3)return p3+(q3-p3)*(2/3-t)*6;return p3;};
+      r=hue2rgb(p2,q,h+1/3); g=hue2rgb(p2,q,h); b=hue2rgb(p2,q,h-1/3);
+    }
+    return `rgba(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)},${alpha})`;
+  }
+
+  /* ── 現ステージのメモ星 ── */
+  const sm = state.memos.filter(m => m.stage === state.currentStage);
+
+  /* 星座ライン */
+  if (sm.length >= 2) {
+    oc.strokeStyle = 'rgba(255,255,255,0.06)'; oc.lineWidth = 0.7; oc.beginPath();
+    sm.forEach((m, i) => {
+      const x = m.x * W, y = m.y * H;
+      i === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y);
+    });
+    oc.stroke();
+  }
+
+  /* 各メモ星（引力オフセットなし） */
+  sm.forEach((m, i) => {
+    const x = m.x * W, y = m.y * H;
+    const p = 0.72 + 0.28 * Math.sin(tick * 0.022 + i * 1.4);
+    const starColor = m.color || starPropsFromText(m.text).color;
+    const colorFull = starColor.startsWith('hsl') ? hslToRgba(starColor, 0.73) : starColor + 'bb';
+    const colorDim  = starColor.startsWith('hsl') ? hslToRgba(starColor, 0.16) : starColor + '28';
+    const colorZero = starColor.startsWith('hsl') ? hslToRgba(starColor, 0)    : starColor + '00';
+    /* グロー */
+    const glow = oc.createRadialGradient(x,y,0,x,y,32*p);
+    glow.addColorStop(0, colorFull); glow.addColorStop(.45, colorDim); glow.addColorStop(1, colorZero);
+    oc.beginPath(); oc.arc(x,y,32*p,0,Math.PI*2); oc.fillStyle=glow; oc.fill();
+    /* 本体 */
+    oc.beginPath(); oc.arc(x,y,5.5*p,0,Math.PI*2);
+    oc.fillStyle=starColor; oc.shadowColor=starColor; oc.shadowBlur=16*p; oc.fill(); oc.shadowBlur=0;
+    /* ラベル */
+    oc.fillStyle='rgba(255,255,255,0.35)'; oc.font="700 8px 'Orbitron',monospace"; oc.textAlign='center';
+    oc.fillText(`#${String(i+1).padStart(2,'0')}`, x, y+18);
+  });
+
+  /* ウォーターマーク */
+  oc.fillStyle = 'rgba(255,255,255,0.10)';
+  oc.font = "700 9px 'Orbitron',monospace";
+  oc.textAlign = 'right';
+  oc.fillText('星ヲ巡る旅 #hoshi_tabi', W - 10, H - 8);
+
+  /* ダウンロード — toDataURL（同期）＋DOM追加方式・ユーザー操作起点で即実行 */
+  const stage = state.currentStage;
+  const now = new Date();
+  const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+  const filename = `hoshi_tabi_ch${String(stage+1).padStart(2,'0')}_${ts}.png`;
+  const dataURL = offscreen.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  requestAnimationFrame(() => document.body.removeChild(link));
+}
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: KEYBOARD — キーボードショートカット
+═══════════════════════════════════════════════════════ */
+document.getElementById('memo-input').addEventListener('keydown', e=>{
+  if ((e.ctrlKey||e.metaKey) && e.key==='Enter') { e.preventDefault(); addOrUpdateMemo(); }
+  if (e.key==='Escape') cancelEdit();
+});
+
+/* ═══════════════════════════════════════════════════════
+   ■ MODULE: INIT — 初期化
+═══════════════════════════════════════════════════════ */
+function init() {
+  loadState();
+  resizeCanvas();
+  initBgStars();
+  const active = Math.floor(state.memos.length/CONFIG.memosPerStage);
+  state.totalStages = Math.max(state.totalStages, active+1);
+  if (state.currentStage > active) state.currentStage = active;
+  initIntro();
+  renderAll();
+  draw();
+}
+
+window.addEventListener('resize', ()=>{ resizeCanvas(); });
+init();
+</script>
+</body>
+</html>
